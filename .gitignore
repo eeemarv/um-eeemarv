@@ -1,0 +1,15 @@
+/web/bundles/
+/web/uploads/
+/web/media/
+/web/css/
+/web/js/
+/app/bootstrap*
+/app/cache/*
+/app/logs/*
+/app/config/parameters.yml
+/app/resources/translations/*.yml
+/app/resources/views/*
+/app/DoctrineMigrations/*
+/vendor/
+composer.phar
+/*~
