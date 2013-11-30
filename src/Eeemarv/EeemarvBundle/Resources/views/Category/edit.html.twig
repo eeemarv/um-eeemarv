@@ -1,0 +1,30 @@
+{% extends 'EeemarvBundle::base.html.twig' %}
+
+{% block page_header_inner %}{{ 'category_edit'|trans }}{% endblock %}
+
+
+{% block inner_content -%}
+
+    <form action="{{ path('lets_transact_categories_update', { 'slug': entity.slug }) }}" method="post" {{ form_enctype(edit_form) }}>
+        <input type="hidden" name="_method" value="PUT" />
+        {{ form_widget(edit_form) }}
+        <p>
+            <button type="submit">Edit</button>
+        </p>
+    </form>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('lets_transact_categories') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <form action="{{ path('lets_transact_categories_delete', { 'slug': entity.slug }) }}" method="post">
+            <input type="hidden" name="_method" value="DELETE" />
+            {{ form_widget(delete_form) }}
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+</ul>
+{% endblock %}

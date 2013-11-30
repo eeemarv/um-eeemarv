@@ -1,0 +1,109 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>User list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Image</th>
+                            
+                <th>Code<br/>
+                Username</th>
+                
+                <th>Phone<br/>                              
+                Mobile<br/>                
+                Email<br/>
+                Website</th>                
+
+                <th>Role</th>
+
+                <th>Firstname<br/>
+                Lastname<br/>
+				Birthday<br/>
+                Gender</th>
+                
+
+                <th>Street
+                Nr
+                Bus<br/>
+                PostalCode
+                PlaceName</th>
+
+
+
+                <th>Balance<br/>
+                /Limit</th>               
+                <th>Createdat</th>
+                <th>Updatedat</th>
+                <th>Activatedat</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr class="{{ cycle( ['even', 'odd'], loop.index ) }}">
+                <td><img src="{% if entity.getWebImagePath() %}{{ (entity.getWebImagePath()) | imagine_filter('thumb60x60') }}{% endif %}" width="60" heigth="60"/></td>           
+                <td><a href="{{ path('lets_transact_admin_users_show', { 'slug': entity.slug }) }}">{{ entity.code }}<br/>
+                {{ entity.username }}</a><br/>
+                {% if entity.active %}A {% endif %}
+                {% if entity.system %}S {% endif %}
+                {% if entity.quitting %}Q {% endif %}
+                {{ entity.locale }}                
+                </td>
+
+                <td>{{ entity.phone }} [{{ entity.showPhone }}]<br/>
+                {{ entity.mobile }} [{{ entity.showMobile }}]<br/>                                
+                {{ entity.email }}<br/>
+                {{ entity.website }}</td>                
+                                
+                <td>{% if entity.hasRole('ROLE_SUPER_ADMIN') %}super admin
+					{% elseif entity.hasRole('ROLE_ADMIN') %}admin
+					{% elseif entity.hasRole('ROLE_MODERATOR') %}moderator
+					{% elseif entity.hasRole('ROLE_USER') %}user{% endif %}</td>
+ 
+                <td>{{ entity.firstName }}<br/>
+                {{ entity.lastName }}<br/>
+                {{ entity.birthday|date('Y-m-d') }}<br/>                
+                {{ entity.gender }}</td>
+
+                <td>{{ entity.street }}
+                {{ entity.houseNumber }} 
+                {{ entity.bus }}<br/>
+                {{ entity.place.postalCode }}
+                {{ entity.place.name }} [{{ entity.showAddress }}]</td>
+
+
+                
+
+                
+
+                <td>{{ entity.balance // currency_rate }}<br/>
+                /{{ entity.balanceLimit // currency_rate }}</td>
+
+                <td>{% if entity.createdAt %}{{ entity.createdAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if entity.updatedAt %}{{ entity.updatedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if entity.activatedAt %}{{ entity.activatedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('lets_transact_users_show', { 'slug': entity.slug }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('lets_transact_users_edit', { 'slug': entity.slug }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('lets_transact_users_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

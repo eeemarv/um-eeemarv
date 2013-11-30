@@ -1,0 +1,19 @@
+{% extends 'LetsTransactBundle::super-admin.html.twig' %}
+
+
+<h1>Place creation</h1>
+
+<form action="{{ path('lets_transact_places_create') }}" method="post" {{ form_enctype(form) }}>
+    {{ form_widget(form) }}
+    <p>
+        <button type="submit">Create</button>
+    </p>
+</form>
+
+<ul class="record_actions">
+    <li>
+        <a href="{{ path('lets_transact_places') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>

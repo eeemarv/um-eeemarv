@@ -1,0 +1,44 @@
+{% extends 'EeemarvBundle::base.html.twig' %}
+
+{% block page_header_inner %}{{ 'transactions'|trans }}{% endblock %}
+
+
+{% block inner_content -%}
+	
+    <table class="table table-striped">
+        <thead>
+            <tr><th>
+            <div class="row-fluid">				
+                    <div class="span2">{{ 'date'|trans }}</div> 				
+					<div class="span8">{{ 'description'|trans }}</div>
+					<div class="span2">{{ 'amount'|trans }} ({{ 'currency_plural'|trans({}, 'site') }})</div> 
+			</div> 
+            </th></tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr><td>
+				<div class="row-fluid">				
+                    <div class="span2">{{ entity.transactionAt|date('Y-m-d') }} </div> 				
+					<div class="span8">
+						<a href="{{ path('lets_transact_members_show', { 'code': entity.fromCode }) }}"> {{ entity.fromCode|e }} {{ entity.fromName|e }} </a><br/>
+						<i class="icon-arrow-right"></i><a href="{{ path('lets_transact_members_show', { 'code': entity.toCode }) }}"> {{ entity.toCode|e }} {{ entity.toName|e }} </a>
+						{# ( {{ entity.distance|distance }} ) #}<br/>
+						<a href="{{ path('lets_transact_transactions_show', { 'id': entity.id }) }}">{{ entity.description|e }}</a>	
+										
+					</div>
+					<div class="span2">{{ entity.amount // currency_rate }}</div> 
+				</div> 
+            </td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('lets_transact_transactions_new') }}">
+                {{ 'transaction_new'|trans }}
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

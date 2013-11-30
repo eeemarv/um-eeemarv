@@ -1,0 +1,41 @@
+{% extends 'EeemarvBundle::base.html.twig' %}
+
+{% block page_header_inner %}{{ 'categories' }}{% endblock %}
+    
+{% block inner_content %}
+
+	{% macro nested_tree(entities) %}
+		{% set prev = false %}
+		{% for entity in entities %}
+			<li>
+				<form action="{{ path('lets_transact_categories_button', { 'slug': entity.slug }) }}" method="POST">
+				<a href="{{ path('lets_transact_categories_show', { 'slug': entity.slug }) }}">{{ entity.name|e }}</a>
+				{% if entity.messageCount %}&nbsp;({{ entity.messageCount }}){% endif %}
+				&nbsp;&nbsp; 
+				<div class="btn-group">
+					<button class="btn" name="add" value="add" title="{{ 'categories.add_child'|trans }}"><i class="icon-plus"></i></button>
+					{% if entity.children and entity.children|length > 1 %}<button class="btn" name="sort" value="sort" title="{{ 'categories.sort_children'|trans }}"><i class="icon-sort-by-alphabet"></i></button>{% endif %}
+					{% if entity.level > 1 %}<button class="btn" name="left" value="left"><i class="icon-chevron-left"></i></button>{% endif %}
+					{% if not loop.last %}<button class="btn" name="down" value="down"><i class="icon-chevron-down"></i></button>{% endif %}
+					{% if not loop.first %}<button class="btn" name="up" value="up"><i class="icon-chevron-up"></i></button>{% endif %}
+					{% if prev %}<button class="btn" name="right" value="right"><i class="icon-chevron-right"></i></button>{% endif %}
+					<button class="btn" name="edit" value="edit"><i class="icon-cog"></i></button>
+					{% if not entity.messageCount and not entity.children %}<button class="btn" name="delete" value="delete"><i class="icon-remove"></i></button>{% endif %}
+				</div>
+                </form>       
+				{% if entity.children %}
+					<ul>
+						{{ _self.nested_tree(entity.children) }}
+					</ul>
+				{% endif %}
+			</li>
+			{% set prev = true %}
+		{% endfor %}
+	{% endmacro %}
+
+	
+	<ul>
+	{{ _self.nested_tree(categories) }}
+	</ul>
+
+{% endblock %}

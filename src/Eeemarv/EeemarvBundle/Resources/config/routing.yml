@@ -1,0 +1,46 @@
+
+
+_imagine:
+    resource: .
+    type: imagine
+ 
+
+eeemarv_message:
+    resource: @EeemarvBundle/Controller/MessageController.php
+    type: annotation
+    
+    
+eeemarv_user:
+    resource: @EeemarvBundle/Controller/UserController.php
+    type: annotation
+  
+eeemarv_transaction:
+    resource: @EeemarvBundle/Controller/TransactionController.php
+    type: annotation 
+
+eeemarv_category:
+    resource: @EeemarvBundle/Controller/CategoryController.php
+    type: annotation
+    
+eeemarv_places:
+    resource: @EeemarvBundle/Controller/PlaceController.php
+    type: annotation
+
+eeemarv_fos_user:
+    resource: @EeemarvBundle/Resources/config/routing/fos_user.yml
+    prefix: /    
+
+
+eeemarv_default:
+    resource: @EeemarvBundle/Controller/DefaultController.php
+    type: annotation
+    
+
+eeemarv_missing_locale:
+    pattern: /
+    options: { i18n: false }
+    defaults:
+        _controller: FrameworkBundle:Redirect:redirect
+        route: eeemarv_pages
+        permanent: true # 301 redirect
+

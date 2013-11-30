@@ -1,0 +1,221 @@
+
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+
+
+framework:
+    #esi:             ~
+    translator: { fallback: %locale% }
+    secret: %secret%
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: ~
+    form: ~
+    csrf_protection: true
+    validation: { enable_annotations: true }
+    templating:
+        engines: ['twig']
+        #assets_version: SomeVersionScheme
+    default_locale: "%locale%"
+    trusted_proxies: ~
+    session: ~
+    fragments: ~
+    http_method_override: true
+
+# Twig Configuration
+
+twig:
+    debug: %kernel.debug%
+    strict_variables: %kernel.debug%
+    globals:
+        locales: %locales%
+        currency_rate: %currency_rate%
+#    form:
+#        resources:
+#            - EeemarvBundle:Form:fields.html.twig       
+      
+# Assetic Configuration
+
+assetic:
+    debug: %kernel.debug%
+    use_controller: false
+    bundles: [ ]
+    filters:
+#        less:
+#            node: /usr/local/bin/node
+#            node_paths: [/usr/local/lib/node_modules]
+#            apply_to: "\.less$"           
+        lessphp:
+            file: %kernel.root_dir%/../vendor/leafo/lessphp/lessc.inc.php
+            apply_to: "\.less$"
+            preserve_comments: false   
+        cssrewrite: ~
+       
+
+
+# Doctrine Configuration
+
+doctrine:
+    dbal:
+        driver:   %database_driver%
+        host:     %database_host%
+        port:     %database_port%
+        dbname:   %database_name%
+        user:     %database_user%
+        password: %database_password%
+        path:     %database_path%           
+        charset:  UTF8
+        types:
+            datetime: Eeemarv\EeemarvBundle\DoctrineExtensions\DBAL\Types\UTCDateTimeType
+       
+    orm:
+        auto_generate_proxy_classes: %kernel.debug%
+        entity_managers:
+            default:
+                auto_mapping: true
+                dql:
+                    numeric_functions:
+                        GEO_DISTANCE: Eeemarv\EeemarvBundle\DQL\GeoDistanceFunction
+                        GEO_PYTHA_DISTANCE: Eeemarv\EeemarvBundle\DQL\GeoPythagorasDistanceFunction        
+
+
+# Swiftmailer Configuration
+
+swiftmailer:
+    transport: %mailer_transport%
+    host:      %mailer_host%
+    username:  %mailer_user%
+    password:  %mailer_password%
+    spool:     { type: memory }
+
+
+## 
+
+
+
+# eeeMarv
+
+eeemarv:
+    code:          %code%
+    locales:       %locales%
+    currency_rate: %currency_rate%
+
+
+
+# ewz recaptcha
+
+ewz_recaptcha:
+    public_key: %recaptcha_public%
+    private_key: %recaptcha_private%
+    secure: false
+    locale_key: kernel.default_locale
+    enabled: true
+
+
+
+# doctrine extensions
+
+stof_doctrine_extensions:
+    default_locale: %locale%
+    translation_fallback: true
+    orm:
+        default:
+            timestampable: true
+            sluggable: true
+            blameable: true
+            translatable: true
+ #           loggable: true
+ #           uploadable: true
+
+
+# fos user
+
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: Eeemarv\EeemarvBundle\Entity\User
+    registration:
+        form:
+            type: eeemarv_registration_type
+        confirmation:
+            enabled: true
+            template: EeemarvBundle:Registration:email.txt.twig
+    profile:
+        form:
+            type: eeemarv_profile_type
+    from_email:
+        address: noreply@eeemarv.net
+        sender_name: eeeMarv
+    service:
+        user_manager: eeemarv.user_manager 
+
+
+
+# vich geografical
+
+vich_geographical:
+    db_driver: orm
+
+
+
+# liip imagine    
+ 
+liip_imagine:
+    cache_prefix: /images-cache
+    filter_sets:
+        thumb100x100: 
+            filters: 
+                thumbnail: { size: [100, 100], mode: outbound }
+               
+               
+
+
+# jms i18n
+
+
+jms_i18n_routing:
+    default_locale: %locale%
+    locales: %locales%
+    strategy: prefix_except_default
+
+
+
+# ivory ck editor
+
+ivory_ck_editor:
+    configs:
+        eeemarv_message:
+            toolbar: "toolbar_message"
+            uiColor: "#222"
+        eeemarv_page:
+            toolbar: "toolbar_page"
+            uiColor: "#222"              
+    toolbars:
+        configs:
+            toolbar_message: ["@document", "@basic", "@paragraph", "@link", "@tools"]
+            toolbar_page: ["@document", "@basic", "@paragraph", "@link", "@tools"] 
+        items:
+            document: ["Source"]
+            basic: ["Bold", "Underline", "Italic", "Blockquote", "Font", "FontSize", "TextColor"]
+            paragraph: ["NumberedList", "BulletedList", "JustifyLeft", "JustifyCenter", "JustifyRight"]
+            link: ["Link", "Unlink"]
+            tools: ["Maximize"]
+ 
+ 
+ # lexik maintenance
+
+
+lexik_maintenance:
+    driver:
+        class: Lexik\Bundle\MaintenanceBundle\Drivers\FileDriver    
+        options: {file_path: %kernel.root_dir%/cache/lock}   
+
+
+
+# braincrafted bootstrap
+
+bc_bootstrap:
+    less_filter: lessphp
+    jquery_path: %kernel.root_dir%/../web/bundles/bmatznerjquery/js/jquery.js
+

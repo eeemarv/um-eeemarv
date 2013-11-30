@@ -1,0 +1,37 @@
+{% extends 'form_div_layout.html.twig' %}
+
+
+
+{% block choice_widget_collapsed %}
+{% spaceless %}
+	{% set attr = {'class':'span12'}|merge(attr) %}
+	{{ parent() }}
+{% endspaceless %}
+{% endblock choice_widget_collapsed %}
+
+{% block form_widget_simple %}
+{% spaceless %}
+	{% set attr = {'class':'span12'}|merge(attr) %}
+	{{ parent() }}
+{% endspaceless %}
+{% endblock form_widget_simple %}
+
+
+{% block textarea_widget %}
+{% spaceless %}
+	{% set attr = {'class':'span12', 'rows':'5'}|merge(attr) %}
+	{{ parent() }}
+{% endspaceless %}
+{% endblock textarea_widget %}
+
+{% block date_widget %}
+{% spaceless %}
+	<div {{ block('widget_container_attributes') }}>
+		{{ date_pattern|replace({
+			'{{ year }}': form_widget(form.year, {'attr':{'class':'span2'}}),
+			'{{ month }}': form_widget(form.month, {'attr':{'class':'span2'}}),
+			'{{ day }}': form_widget(form.day, {'attr':{'class':'span2'}}),
+		})|raw }}
+	</div>
+{% endspaceless %}
+{% endblock date_widget %}

@@ -1,0 +1,41 @@
+{% extends 'EeemarvBundle::base.html.twig' %}
+{% form_theme form 'EeemarvBundle:Form:fields.html.twig' %}
+
+{% block inline_login %}{% endblock %}
+
+{% block inner_content %}
+
+<legend>{{ 'contact'|trans }}</legend>
+
+{# load explain <p>{{ 'contact_explain'|trans }}</p> #}
+
+<form action="{{ path('eeemarv_eeemarv_default_contact') }}" method="post">
+
+{{ form_errors(form) }}
+
+
+{{ form_label(form.email) }}
+{{ form_errors(form.email) }}
+{{ form_widget(form.email) }}
+
+
+{{ form_label(form.subject) }}
+{{ form_errors(form.subject) }}
+{{ form_widget(form.subject) }}
+
+
+{{ form_label(form.message) }}
+{{ form_errors(form.message) }}
+{{ form_widget(form.message) }}
+
+
+
+{{ form_rest(form) }}
+
+<div>
+	<input type="submit" value="{{ 'button.send'|trans }}" class="btn btn-primary top-10"/>
+</div>
+</form>
+
+
+{% endblock inner_content %}

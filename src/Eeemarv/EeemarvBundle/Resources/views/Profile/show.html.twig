@@ -1,0 +1,97 @@
+
+{% extends 'EeemarvBundle::base.html.twig' %}
+
+{% block page_header_inner %}{{ 'profile'|trans }}{% endblock %}
+
+{% block inner_content -%}
+
+  {#  {% if user.getWebImagePath() %}<img src="{{ (user.getWebImagePath()) | imagine_filter('thumb200x200') }}"/>{% endif %} #}
+    
+    <table class="record_properties">
+        <tbody>
+             <tr>
+                <th>{{ 'code'|trans }} & {{ 'username'|trans }}</th>
+                <td>{{ user.code|e }} {{ user.username|e }}</td>
+            </tr>       
+            <tr>
+                <th>{{ 'balance'|trans }}</th>
+                <td>{{ user.balance // currency_rate }} {{ 'currency_plural'|trans({}, 'site') }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'limit'|trans }} </th>
+                <td>&plusmn;{{ user.balanceLimit // currency_rate }} {{ 'currency_plural'|trans({}, 'site') }}</td>
+            </tr>                     
+            <tr>
+                <th>{{ 'email'|trans }}</th>
+                <td>{{ user.email|e }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'role'|trans }}</th>
+                <td>{{ user.roles }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'name'|trans }}</th>
+                <td>{{ user.firstName|e }} {{ user.lastName|e }}</td>
+            </tr>
+
+            <tr>
+                <th></th>
+                <td></td>
+            </tr>
+
+            <tr>
+                <th>{{ 'gender'|trans }}</th>
+                <td><i class="icon-{% if user.gender == 'f' %}female{% else %}male{% endif %}"></i></td>
+            </tr>
+            <tr>
+                <th>{{ 'birthday'|trans }}</th>
+                <td>{{ user.birthday|date('Y-m-d') }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'address'|trans }}</th>
+                <td>{{ user.street }} {{ user.houseNumber }} {{ user.box }} </br>
+                {{ user.place.postalCode }} {{ user.place.name }}
+                </td>
+            </tr>
+
+            <tr>
+                <th>{{ 'phone'|trans }}</th>
+                <td>{{ user.phone }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'mobile'|trans }}</th>
+                <td>{{ user.mobile }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'website'|trans }}</th>
+                <td>{{ user.website }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'system_account'|trans }}</th>
+                <td>{{ user.systemAccount }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'quitting'|trans }}</th>
+                <td>{{ user.quitting }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'locale'|trans }}</th>
+                <td>{{ user.locale }}</td>
+            </tr>
+
+            <tr>
+                <th>{{ 'activated_at'|trans }}</th>
+                <td>{% if user.activatedAt %}{{ user.activatedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+<ul class="record_actions">
+    <li>
+        <a href="{{ path('fos_user_profile_edit') }}">
+            Edit profile
+        </a>
+    </li>
+</ul>
+{% endblock %}
+

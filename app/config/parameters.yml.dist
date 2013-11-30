@@ -1,0 +1,33 @@
+parameters:
+    database_driver: pdo_mysql
+    database_host: 127.0.0.1
+    database_port: ~
+    database_name: eeemarv
+    database_user: root
+    database_password: ~
+    database_path: null
+
+    mailer_transport:  smtp
+    mailer_host:       127.0.0.1
+    mailer_user:       ~
+    mailer_password:   ~
+
+    mail_from_address: noreply
+    mail_list_address: list
+    mail_admin_address: info
+    
+    
+    secret: ThisTokenIsNotSoSecretChangeIt
+ 
+    recaptcha_public: ~  #get a public and private key for reCaptcha (http://captcha.net/) 
+    recaptcha_private: ~ 
+     
+    locale: en         #the fallback, default locale
+    locales: [ en ]    #all supported locales (translation files must be present)
+    
+    unique_id: UniqueIdToIdentifyYourLetsGroup123   #random base64 id, should never be changed after initial setup
+    code: ylc                                       #lower case characters and numbers only, maximum length = 8
+    currency_rate: 60                               #divider to display your local lets-currency (internally Lets-seconds are used; 3600 units per hour)
+
+      
+    

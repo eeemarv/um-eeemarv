@@ -1,0 +1,126 @@
+# eeeMarv messages.nl.yml
+
+language_name: Nederlands
+
+back_to_top: Terug naar boven
+back_to_list: Terug naar lijst
+
+
+registration: Inschrijven 
+registration_explain: Als je interesse hebt om tot de lets-groep toe te treden kan je hier vrijblijvend je gegevens invullen en dan zal je uitgenodigd worden voor een instap-moment. Het email adres dat je hier opgeeft moet je binnen de 4 uur confirmeren anders wordt je inschrijving niet geregistreerd. De velden met een sterretje* zijn verplicht in te vullen. Je gegevens worden behandeld met respect voor je privacy en enkel intern gebruikt.  
+
+contact: Contact
+
+forgot_password: Ik ben mijn paswoord vergeten.
+
+
+mail: 
+    contact: Dit bericht werd verzonden vanaf het contact formulier.
+
+flash:
+    success:
+        contact: Je bericht werd verzonden. 
+        
+button:
+    send: Verzend 
+        
+
+gender: Geslacht
+male: Man
+female: Vrouw
+
+
+
+
+page: Pagina
+previous: Vorige
+next: Volgende
+
+submit: Verzend
+
+member: Lid
+members: Leden
+
+code: Code
+description: Omschrijving
+tags: Trefwoorden
+role: Rol
+username: Gebruikersnaam
+balance: Saldo
+limit: Limiet
+distance: Afstand
+email: Email
+first_name: Voornaam
+last_name: Achternaam
+telephone: Telefoon
+mobile: GSM
+
+transaction: Transactie
+transactions: Transacties
+transaction_new: Nieuwe transactie   
+   
+time: Tijd   
+   
+category: Categorie
+categories: Categorieën
+category_new: Nieuwe categorie  
+     
+message: Bericht
+messages: Berichten
+message_new: Nieuw bericht 
+   
+admin: Beheer
+super_admin: Super beheer
+
+user: Gebruiker
+users: Gebruikers
+user_new: Nieuwe gebruiker    
+  
+subject: Onderwerp
+date: Datum 
+
+edit: Aanpassen
+delete: Verwijderen
+
+want: Vraag
+
+offer: Aanbod
+
+topic: Onderwerp
+topics: Onderwerpen
+announcement: Aankondiging
+announcements: Aankondigingen
+service: Dienst
+services: Diensten
+object: Voorwerp
+objects: Voorwerpen
+amount: Bedrag
+price: Prijs
+
+places: Plaatsen
+postal_code: Postcode
+place_name: Plaatsnaam
+
+translations: Vertaling
+primary: Primaire
+country: Land
+
+
+
+   
+mail:
+    noreply: noreply
+    info: info
+    members: leden
+    admins: admins    
+   
+logout: Afmelden
+login: Aanmelden
+profile: Profiel    
+   
+     
+ 
+   
+   
+  
+  

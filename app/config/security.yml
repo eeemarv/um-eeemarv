@@ -1,0 +1,59 @@
+
+jms_security_extra:
+    secure_all_services: false
+    expressions: true
+
+
+
+security:
+    acl:
+        connection: default
+
+    encoders:
+        Eeemarv\EeemarvBundle\Entity\User: sha512
+
+    role_hierarchy:
+        ROLE_MODERATOR: ROLE_USER
+        ROLE_ADMIN: [ROLE_USER, ROLE_MODERATOR, ROLE_ALLOWED_TO_SWITCH]
+        
+    providers:
+        fos_userbundle:
+            id: fos_user.user_provider.username_email
+            
+    firewalls:
+#        dev:
+#            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+#            security: false   
+            
+#        wsse_secured:
+#            pattern: /api
+#            wsse: true
+#            stateless: true
+#            anonymous: true
+            
+        main:
+            pattern: ^/
+            form_login:
+                provider: fos_userbundle
+                csrf_provider: form.csrf_provider
+                login_path: fos_user_security_login 
+                check_path: fos_user_security_check
+            logout:
+                path: fos_user_security_logout
+                target: eeemarv_home
+            anonymous: true
+            switch_user: true
+
+
+#    access_control:
+#        - { path: /contact, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: /categories, roles: ROLE_ADMIN }
+#        - { path: /places, roles: ROLE_ADMIN }
+#        - { path: /transactions, roles: ROLE_USER }
+#        - { path: /members, roles: ROLE_USER }        
+#        - { path: /messages, roles: ROLE_USER }                               
+#        - { path: /login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: /register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: /resetting, roles: IS_AUTHENTICATED_ANONYMOUSLY }      
+#        - { path: /, roles: IS_AUTHENTICATED_ANONYMOUSLY }        
+        

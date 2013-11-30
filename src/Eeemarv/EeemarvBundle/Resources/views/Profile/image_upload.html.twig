@@ -1,0 +1,10 @@
+{% extends 'EeemarvBundle::base.html.twig' %}
+
+<h1>Upload Profile Image</h2>
+
+<form action="#" {{ form_enctype(form) }} method="POST">
+    {{ form_widget(form) }}
+    <div>
+        <input type="submit" value="Upload Image" />
+    </div>
+</form>

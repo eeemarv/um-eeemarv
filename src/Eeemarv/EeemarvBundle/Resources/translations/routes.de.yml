@@ -1,0 +1,10 @@
+eeemarv_messages: /mes------/{slug}  #fix me
+eeemarv_members: /mitglieder/{code}
+eeemarv_transactions: /tr------      #fix me
+eeemarv_categories: /cat------ #fix me 
+eeemarv_places: /pla------ #fix me
+
+
+eeemarv_register_form: /einschreibung
+eeemarv_login_form: /anmeldung
+

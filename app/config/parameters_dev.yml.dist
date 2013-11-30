@@ -1,0 +1,6 @@
+parameters:
+    mailer_transport: gmail    #for using gmail during development
+    mailer_user:               #your gmail account, part before @gmail.com  
+    mailer_password:           #your gmail password    
+    mailer_delivery_address:   #all mails will go here in development mode  
+    

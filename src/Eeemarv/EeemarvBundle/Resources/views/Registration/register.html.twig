@@ -1,0 +1,92 @@
+{% extends "EeemarvBundle::base.html.twig" %}
+{% form_theme form 'EeemarvBundle:Form:fields.html.twig' %}
+
+
+{% block inline_login %}{% endblock %}
+
+{% block inner_content %}
+
+<legend>{{ 'registration'|trans }}</legend>
+{# load explain <p>{{ 'registration_explain'|trans }}</p> #}
+
+<form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
+
+
+{{ form_errors(form) }}
+
+
+{{ form_widget(form.username) }}{# unique random hidden field at registration // username is set later by admin or automatically #}
+{{ form_widget(form.plainPassword) }} {# hidden #}
+
+{{ form_label(form.email) }}
+{{ form_errors(form.email) }}
+{{ form_widget(form.email) }}
+
+{{ form_label(form.firstName) }}
+{{ form_errors(form.firstName) }}
+{{ form_widget(form.firstName) }}
+
+{{ form_label(form.lastName) }}
+{{ form_errors(form.lastName) }}
+{{ form_widget(form.lastName) }}
+
+
+<div class="controls controls-row">
+
+{{ form_label(form.birthday) }}
+{{ form_errors(form.birthday) }}
+{{ form_widget(form.birthday) }}
+
+{# {{ form_label(form.gender) }} #}
+{{ form_errors(form.gender) }}
+{{ form_widget(form.gender, {'attr':{'class':'span6 form-inline'}}) }}
+
+</div>
+
+
+<div class="controls controls-row">
+<div class="span6">
+{{ form_label(form.street) }}
+{{ form_errors(form.street) }}
+{{ form_widget(form.street) }}
+</div>
+<div class="span3">
+
+{{ form_label(form.houseNumber) }}
+{{ form_errors(form.houseNumber) }}
+{{ form_widget(form.houseNumber) }}
+</div>
+<div class="span3">
+{{ form_label(form.box) }}
+{{ form_errors(form.box) }}
+{{ form_widget(form.box) }}
+</div>
+</div>
+
+
+{{ form_label(form.place) }}
+{{ form_errors(form.place) }}
+{{ form_widget(form.place) }}
+
+{{ form_label(form.phone) }}
+{{ form_errors(form.phone) }}
+{{ form_widget(form.phone) }}
+
+
+{{ form_label(form.mobile) }}
+{{ form_errors(form.mobile) }}
+{{ form_widget(form.mobile) }}
+
+
+{{ form_rest(form) }}
+
+<div>
+	<input type="submit" value="{{ 'button.send'|trans }}" class="btn btn-primary top-10"/>
+</div>
+
+</form>
+
+
+{% endblock inner_content %}
+
+

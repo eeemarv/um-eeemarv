@@ -1,0 +1,10 @@
+eeemarv_messages: /berichten/{slug}
+eeemarv_members: /leden/{code}
+eeemarv_transactions: /transacties
+eeemarv_categories: /categorieën 
+eeemarv_places: /plaatsen 
+
+eeemarv_register_form: /inschrijving
+eeemarv_login_form: /aanmelding
+
+

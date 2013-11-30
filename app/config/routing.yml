@@ -1,0 +1,9 @@
+
+
+
+eeemarv:
+    resource: "@EeemarvBundle/Resources/config/routing.yml"
+    prefix:   /
+    
+
+

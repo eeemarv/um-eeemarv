@@ -1,0 +1,84 @@
+{% extends 'EeemarvBundle::base.html.twig' %}
+
+{% block page_header_inner %}{{ 'category'|trans }} {{ entity.name|e }}{% endblock %}
+
+{% block inner_content -%}
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>{{ 'description'|trans }}</th>
+                <td>{{ entity.description|e }}</td>
+            </tr>
+            <tr>
+                <th>Left</th>
+                <td>{{ entity.left }}</td>
+            </tr>
+            <tr>
+                <th>Right</th>
+                <td>{{ entity.right }}</td>
+            </tr>
+            <tr>
+                <th>Root</th>
+                <td>{{ entity.root }}</td>
+            </tr>
+            <tr>
+                <th>Level</th>
+                <td>{{ entity.level }}</td>
+            </tr>
+            <tr>
+                <th>Messagecount</th>
+                <td>{{ entity.messageCount }}</td>
+            </tr>
+            <tr>
+                <th>Offercount</th>
+                <td>{{ entity.offerCount }}</td>
+            </tr>
+            <tr>
+                <th>Demandcount</th>
+                <td>{{ entity.demandCount }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'type'|trans }}</th>
+                <td>{{ entity.type }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'created_at'|trans }}</th>
+                <td>{{ entity.createdAt|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'created_by'|trans }}</th>
+                <td><a href="{{ path('lets_transact_users_show', { 'slug': entity.createdBy.slug }) }}">{{ entity.createdBy.username|e }}</a></td>
+            </tr>            
+            <tr>
+                <th>{{ 'updated_at'|trans }}</th>
+                <td>{{ entity.updatedAt|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'updated_by'|trans }}</th>
+                <td><a href="{{ path('lets_transact_users_show', { 'slug': entity.updatedBy.slug }) }}">{{ entity.updatedBy.username|e }}</a></td>
+            </tr>            
+            
+            
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('lets_transact_categories') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('lets_transact_categories_edit', { 'slug': entity.slug }) }}">
+            Edit
+        </a>
+    </li>
+    <li>
+        <form action="{{ path('lets_transact_categories_delete', { 'slug': entity.slug }) }}" method="post">
+            <input type="hidden" name="_method" value="DELETE" />
+            {{ form_widget(delete_form) }}
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+</ul>
+{% endblock %}

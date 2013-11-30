@@ -1,0 +1,130 @@
+{% extends 'EeemarvBundle::base.html.twig' %}
+
+{% block page_header_inner %}{{ 'user'|trans }} {{ entity.code }} {{ entity.username }}{% endblock %}
+
+{% block inner_content -%}
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>{{ 'balance'|trans }}</th>
+                <td>{{ entity.balance // currency_rate }}</td>
+            </tr>
+            <tr>
+                <th>Balancelimit</th>
+                <td>{{ entity.balanceLimit // currency_rate }}</td>
+            </tr>                     
+            <tr>
+                <th>{{ 'email'|trans }}</th>
+                <td>{{ entity.email }}</td>
+            </tr>
+
+            <tr>
+                <th>{{ 'roles'|trans }}</th>
+                <td>{{ entity.roles }}</td>
+            </tr>
+
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Slug</th>
+                <td>{{ entity.slug }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'first_name'|trans }}</th>
+                <td>{{ entity.firstName }}</td>
+            </tr>
+
+            <tr>
+                <th>{{ 'last_name'|trans }}</th>
+                <td>{{ entity.lastName }}</td>
+            </tr>
+
+            <tr>
+                <th>{{ 'gender'|trans }}</th>
+                <td>{{ entity.gender }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'birthday'|trans }}</th>
+                <td>{{ entity.birthday|date('Y-m-d') }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'street'|trans }}</th>
+                <td>{{ entity.street }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'housenumber'|trans }}</th>
+                <td>{{ entity.houseNumber }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'box'|trans }}</th>
+                <td>{{ entity.box }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'latitude'|trans }}</th>
+                <td>{{ entity.latitude }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'longitude'|trans }}</th>
+                <td>{{ entity.longitude }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'phone'|trans }}</th>
+                <td>{{ entity.phone }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'mobile'|trans }}</th>
+                <td>{{ entity.mobile }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'website'|trans }}</th>
+                <td>{{ entity.website }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'system_account'|trans }}</th>
+                <td>{{ entity.systemAccount }}</td>
+            </tr>
+            <tr>
+                <th>Quitting</th>
+                <td>{{ entity.quitting }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'locale'|trans }}</th>
+                <td>{{ entity.locale }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'created_at'|trans }}</th>
+                <td>{{ entity.createdAt|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'updated_at'|trans }}</th>
+                <td>{{ entity.updatedAt|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>{{ 'activated_at'|trans }}</th>
+                <td>{% if entity.activatedAt %}{{ entity.activatedAt|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('lets_transact_users') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('lets_transact_users_edit', { 'slug': entity.slug }) }}">
+            Edit
+        </a>
+    </li>
+    <li>
+        <form action="{{ path('lets_transact_users_delete', { 'slug': entity.slug }) }}" method="post">
+            <input type="hidden" name="_method" value="DELETE" />
+            {{ form_widget(delete_form) }}
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+</ul>
+{% endblock %}

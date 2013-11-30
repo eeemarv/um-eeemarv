@@ -1,0 +1,41 @@
+{% extends 'EeemarvBundle::base.html.twig' %}
+
+{% block page_header_inner %}{{ entity.subject }}{% endblock %}
+
+{% block inner_content -%}
+
+<div>{{ entity.text|strip_message|raw }}</div>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Amount</th>
+                <td>{{ entity.price // currency_rate }}</td>
+            </tr>
+            <tr>
+                <th>Createdat</th>
+                <td>{{ entity.createdAt|date('Y-m-d') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('eeemarv_eeemarv_message') }}">
+            {{ 'back_to_list'|trans }}
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('eeemarv_eeemarv_message_edit', { 'slug': entity.slug }) }}">
+            {{ 'edit'|trans }}
+        </a>
+    </li>
+    <li>
+        <form action="{{ path('eeemarv_eeemarv_message_delete', { 'slug': entity.slug }) }}" method="post">
+            <input type="hidden" name="_method" value="DELETE" />
+            {{ form_widget(delete_form) }}
+            <button type="submit">{{ 'delete'|trans }}</button>
+        </form>
+    </li>
+</ul>
+{% endblock %}

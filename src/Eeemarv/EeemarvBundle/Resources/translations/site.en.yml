@@ -1,0 +1,10 @@
+# eeemarv site.en.yml
+# site-specific naming and translations 
+# to be copied to app/Resources/translations and edited 
+
+name: eeemarv
+slogan: web application for lets groups
+letsgroup: eeemarv
+currency_singular: Lets Minute
+currency_plural: Lets Minutes 
+   

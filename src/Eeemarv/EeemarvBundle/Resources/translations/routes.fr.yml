@@ -1,0 +1,9 @@
+eeemarv_messages: /messages/{slug}
+eeemarv_members: /membres/{code}
+eeemarv_transactions: /transactions 
+eeemarv_categories: /categories
+eeemarv_places: /places
+
+
+eeemarv_register_form: /inscription
+eeemarv_login_form: /connexion 

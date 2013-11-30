@@ -1,0 +1,225 @@
+
+
+
+services:
+
+
+#generators
+
+      
+    eeemarv.unique_id_generator:
+        class: Eeemarv\EeemarvBundle\Util\UniqueIdGenerator
+       
+
+
+
+#form types
+
+
+
+    eeemarv.amount.form.type:
+        class: Eeemarv\EeemarvBundle\Form\Type\AmountType
+        arguments: [ %currency_rate% ]
+        tags:
+            - { name: form.type, alias: eeemarv_amount_type }
+
+    eeemarv.code.form.type:
+        class: Eeemarv\EeemarvBundle\Form\Type\CodeType
+        arguments: [ @doctrine.orm.entity_manager ]
+        tags:
+            - { name: form.type, alias: eeemarv_code_type }
+
+    eeemarv.message.form.type:
+        class: Eeemarv\EeemarvBundle\Form\Type\MessageType
+        arguments: [ @eeemarv.unique_id_generator ]
+        tags:
+            - { name: form.type, alias: eeemarv_message_type }
+
+    eeemarv.form.type.parent_category:
+        class: Eeemarv\EeemarvBundle\Form\Type\ParentCategoryType
+        arguments: [ @doctrine.orm.entity_manager ]
+        tags:
+            - { name: form.type, alias: eeemarv_parent_category_type }
+
+    eeemarv.transaction.form:
+        class: Eeemarv\EeemarvBundle\Form\Type\TransactionType
+        arguments: [ @eeemarv.transaction.form_listener, @eeemarv.unique_id_generator ]
+        tags:
+            - { name: form.type, alias: eeemarv_transaction_type }
+ 
+    eeemarv.registration.form.type:
+        class: Eeemarv\EeemarvBundle\Form\Type\RegistrationFormType
+        arguments: [%fos_user.model.user.class%, @eeemarv.unique_id_generator]
+        tags:
+            - { name: form.type, alias: eeemarv_registration_type }
+            
+    eeemarv.contact.form.type:
+        class: Eeemarv\EeemarvBundle\Form\Type\ContactFormType
+        tags:
+            - { name: form.type, alias: eeemarv_contact_type }           
+ 
+    eeemarv.place.form.type:
+        class: Eeemarv\EeemarvBundle\Form\Type\PlaceFormType
+        tags:
+            - { name: form.type, alias: eeemarv_place_type } 
+            
+            
+                   
+    eeemarv.profile.form.type:
+        class: Eeemarv\EeemarvBundle\Form\Type\ProfileFormType
+        arguments: [ %fos_user.model.user.class% ]
+        tags:
+            - { name: form.type, alias: eeemarv_profile_type }      
+ 
+    eeemarv.gender.form.type:
+        class: Eeemarv\EeemarvBundle\Form\Type\GenderType
+        tags:
+            - { name: form.type, alias: eeemarv_gender_type }
+      
+    eeemarv.offer_want.form.type:
+        class: Eeemarv\EeemarvBundle\Form\Type\OfferWantType
+        tags:
+            - { name: form.type, alias: eeemarv_offer_want_type }
+           
+    eeemarv.access.form.type:
+        class: Eeemarv\EeemarvBundle\Form\Type\AccessType
+        tags:
+            - { name: form.type, alias: eeemarv_access_type }
+ 
+    eeemarv.ckeditor.form.type:
+        class: Eeemarv\EeemarvBundle\Form\Type\CKEditorType
+        arguments: [ @request ]
+        scope: request
+        tags:
+            - { name: form.type, alias: eeemarv_ckeditor_type }
+ 
+    eeemarv.category.form.type:
+        class: Eeemarv\EeemarvBundle\Form\Type\CategoryFormType
+        tags:
+            - { name: form.type, alias: eeemarv_category_type } 
+ 
+# menus
+
+    eeemarv.menu_builder:
+        class: Eeemarv\EeemarvBundle\Menu\Builder
+        arguments: [ @knp_menu.factory, @translator ]
+
+    eeemarv.lang.menu:
+        class: Knp\Menu\MenuItem
+        factory_service: eeemarv.menu_builder
+        factory_method: langMenu
+        arguments: [ @request, %locales% ]
+        scope: request
+        tags:
+            - { name: knp_menu.menu, alias: eeemarv_lang_menu }
+
+    eeemarv.personal.menu:
+        class: Knp\Menu\MenuItem
+        factory_service: eeemarv.menu_builder
+        factory_method: personalMenu
+        arguments: [ @request, @security.context ]
+        scope: request
+        tags:
+            - { name: knp_menu.menu, alias: eeemarv_personal_menu }
+   
+    eeemarv.user.menu:
+        class: Knp\Menu\MenuItem
+        factory_service: eeemarv.menu_builder
+        factory_method: userMenu
+        arguments: [ @request ]
+        scope: request
+        tags:
+            - { name: knp_menu.menu, alias: eeemarv_user_menu }
+      
+    eeemarv.admin.menu:
+        class: Knp\Menu\MenuItem
+        factory_service: eeemarv.menu_builder
+        factory_method: adminMenu
+        arguments: [ @request ]
+        scope: request
+        tags:
+            - { name: knp_menu.menu, alias: eeemarv_admin_menu }
+
+    eeemarv.public.menu:
+        class: Knp\Menu\MenuItem
+        factory_service: eeemarv.menu_builder
+        factory_method: publicMenu
+        arguments: [ @request ]
+        scope: request
+        tags:
+            - { name: knp_menu.menu, alias: eeemarv_public_menu }
+
+
+# validators
+
+
+
+
+    eeemarv.active_user_code.validator:
+        class: Eeemarv\EeemarvBundle\Validator\Constraints\ActiveUserCode
+        arguments: [ @doctrine.orm.entity_manager ]
+        tags:
+            - { name: validator.constraint_validator, alias: eeemarv_active_user_code_validator }
+ 
+ 
+ 
+# fos user 
+ 
+ 
+ 
+    
+    eeemarv.user_manager:
+        class: Eeemarv\EeemarvBundle\Manager\UserManager
+        parent: fos_user.user_manager.default
+    
+    eeemarv.registration_success:
+        class: Eeemarv\EeemarvBundle\EventListener\RegistrationListener
+        arguments: [ @eeemarv.user_manager ]
+        tags: 
+            - { name: kernel.event_subscriber }
+
+
+
+# event listeners
+
+
+
+
+    eeemarv.transaction.form_listener:
+        class: Eeemarv\EeemarvBundle\Form\EventListener\EeemarvTransactionEventListener
+        arguments: [ @form.factory, @doctrine.orm.entity_manager ] 
+
+
+
+
+# wsse   
+   
+   
+
+   
+    eeemarv.wsse.security.authentication.provider:
+        class: Eeemarv\EeemarvBundle\Security\Authentication\Provider\WsseProvider
+        arguments: [ '', %kernel.cache_dir%/security/nonces ]
+
+    wsse.security.authentication.listener:
+        class:  Eeemarv\EeemarvBundle\Security\Firewall\WsseListener
+        arguments: [ @security.context, @security.authentication.manager ]   
+   
+
+
+
+# Twig extensions      
+
+
+
+     
+    eeemarv.twig.extension:
+        class: Eeemarv\EeemarvBundle\Twig\EeemarvExtension
+        tags:
+            - { name: twig.extension }
+            
+            
+            
+            
+            
+

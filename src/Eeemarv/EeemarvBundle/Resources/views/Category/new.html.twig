@@ -1,0 +1,21 @@
+{% extends 'EeemarvBundle::base.html.twig' %}
+
+{% block page_header_inner %}{{ 'category_new'|trans }}{% endblock %}
+
+{% block inner_content -%}
+
+    <form action="{{ path('eeemarv_eeemarv_categories_create') }}" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+        <p>
+            <button type="submit">Create</button>
+        </p>
+    </form>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('eeemarv_eeemarv_categories_index') }}">
+            {{ 'back_to_list'|trans }}
+        </a>
+    </li>
+</ul>
+{% endblock %}

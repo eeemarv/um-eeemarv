@@ -1,0 +1,118 @@
+# eeeMarv messages.en.yml
+
+language_name: English
+
+back_to_top: Back to top
+back_to_list: Back to list
+
+registration: Registration 
+registration_explain: If you are interested to join the lets group, you can enter here your data and then you will be invited for a join event. You must confirm within 4 hours the email address you specify here otherwise you are not registered. Fields marked with an asterisk * are mandatory. Your details will be treated with respect for your privacy and kept internally.
+
+contact: Contact
+
+forgot_password: I forgot my password.    
+    
+mail: 
+    contact: This message was sent from the contact form.
+
+flash:
+    success:
+        contact: Your message has been sent.
+
+button:
+    send: Send 
+
+gender: Gender
+male: Male
+female: Female
+
+
+page: Page
+previous: Previous
+next: Next
+
+
+submit: Submit
+
+member: Member
+members: Members
+code: Code
+description: Description
+tags: Tags
+role: Role
+username: Username
+balance: Balance
+limit: Limit
+distance: Distance
+email: Email
+first_name: First name
+last_name: Last name
+telephone: Telephone
+mobile: Mobile
+
+places: Places
+postal_code: Postal code
+place_name: Place name
+
+translations: Translations
+primary: Primary
+country: Country
+
+transaction: Transaction
+transactions: Transactions
+transaction_new: New transaction
+   
+time: Time   
+   
+category: Category
+categories: Categories
+category_new: New category
+
+message: Message
+messages: Messages
+message_new: New message    
+   
+admin: Admin
+
+    
+ 
+subject: Subject  
+date: Date
+
+edit: Edit
+delete: Delete
+
+want: Want
+
+offer: Offer
+
+topic: Topic
+topics: Topics
+announcement: Announcement
+announcements: Announcements
+service: Service
+services: Services
+object: Object
+objects: Objects
+amount: Amount
+price: Price
+
+mail:
+    noreply: noreply
+    info: info
+    members: members
+    admins: admins
+    
+logout: Logout
+login: Login
+profile: Profile 
+   
+   
+   
+   
+     
+ 
+   
+   
+  
+  

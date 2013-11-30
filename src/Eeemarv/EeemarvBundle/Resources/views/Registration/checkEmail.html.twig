@@ -1,0 +1,5 @@
+{% extends "EeemarvBundle::base.html.twig" %}
+
+{% block inner_content %}
+    <p>{{ 'registration.check_email'|trans({'%email%': user.email}, 'FOSUserBundle') }}</p>
+{% endblock inner_content %}
