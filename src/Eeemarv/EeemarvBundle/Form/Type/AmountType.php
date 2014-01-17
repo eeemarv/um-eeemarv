@@ -42,7 +42,7 @@ class AmountType extends AbstractType
 	public function setDefaultOptions(OptionsResolverInterface $resolver)
 	{
 		parent::setDefaultOptions($resolver);
-			$resolver->setDefaults(array(
+		$resolver->setDefaults(array(
 				'data_precision' => 0,
         ));  		
 	}  	

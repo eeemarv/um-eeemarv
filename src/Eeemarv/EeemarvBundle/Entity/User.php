@@ -96,7 +96,7 @@ class User extends BaseUser
      *
      * var string
      * 
-     * @Assert\Length(min=6, groups={"Registration", "ChangePassword"})
+     * @Assert\Length(min=6)
      */
     protected $plainPassword;
     
@@ -274,11 +274,6 @@ class User extends BaseUser
 	protected $code = null;
 	
 
-	
-	
-	
-	
-
 	/**
 	 * @ORM\Column(type="integer")
 	 */
@@ -290,9 +285,15 @@ class User extends BaseUser
 	protected $balanceLimit = 90000;	
 
 	/**
-	 * @ORM\Column(type="boolean")
+	 * @ORM\Column(type="boolean", name="is_active")
 	 */
-	protected $active = false;
+	protected $isActive = false;
+	
+	/**
+	 * @ORM\Column(type="boolean", name="is_leaving")
+	 */
+	protected $isLeaving = false;	
+	
 
 	/**
 	 * There have to be exact 2 system accounts,  
@@ -300,10 +301,22 @@ class User extends BaseUser
 	 * and one active, which is the secretariat.
 	 * Both system accounts have NO ROLES and cannot be used for sessions. 
 	 * 
-	 * @ORM\Column(type="boolean", name="system_account")
+	 * @ORM\Column(type="boolean", name="is_system_account")
 	 * 
 	 */
-	protected $systemAccount = false;
+	protected $isSystemAccount = false;
+	
+	/**
+	 * @ORM\Column(type="boolean", name="is_external")
+	 */
+	protected $isExternal = false;		
+	
+	
+	/**
+	 * @ORM\Column(name="external_password", nullable=true)
+	 */
+	protected $externalPassword = null;
+
 
  	/**
  	 * @ORM\ManyToOne(targetEntity="User", inversedBy="children")
@@ -335,8 +348,14 @@ class User extends BaseUser
      * @var array $messages
      * @ORM\OneToMany(targetEntity="Message", mappedBy="user")
      */
-    private $messages;  
- 
+    private $messages;
+    
+    /**
+     * @var array $comments
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="createdBy")
+     */
+    private $comments;    
+
     /**
      * @var array $nonces
      * @ORM\OneToMany(targetEntity="UserNonce", mappedBy="user")
@@ -377,19 +396,32 @@ class User extends BaseUser
 	protected $updatedBy = null;	
 
 	/**
-	 * @Gedmo\Timestampable(on="change", field="active", value=true)
+	 * @Gedmo\Timestampable(on="change", field="isActive", value=true)
 	 * @ORM\Column(type="datetime", name="activated_at", nullable=true)
 	 */
 	protected $activatedAt = null;	
 	
 	/**
-	 * @Gedmo\Blameable(on="change", field="active", value=true)
+	 * @Gedmo\Blameable(on="change", field="isActive", value=true)
 	 * @ORM\ManyToOne(targetEntity="User")
 	 * @ORM\JoinColumn(name="activated_by", nullable=true)
 	 */
 	protected $activatedBy = null;	
 	
-		
+	/**
+	 * @Gedmo\Timestampable(on="change", field="isLeaving", value=true)
+	 * @ORM\Column(type="datetime", name="is_leaving_since", nullable=true)
+	 */
+	protected $isLeavingSince = null;	
+	
+	/**
+	 * @Gedmo\Blameable(on="change", field="isLeaving", value=true)
+	 * @ORM\ManyToOne(targetEntity="User")
+	 * @ORM\JoinColumn(name="is_leaving_set_by", nullable=true)
+	 */
+	protected $isLeavingSetBy = null;			
+
+
 
 	public function __construct()
     {
@@ -397,6 +429,7 @@ class User extends BaseUser
         $this->transactionsTo = new ArrayCollection();        
         $this->transactionsFrom = new ArrayCollection();      
         $this->messages = new ArrayCollection();
+        $this->comments = new ArrayCollection();       
         $this->nonces = new ArrayCollection();                                 
     }
 
@@ -782,49 +815,26 @@ class User extends BaseUser
     }
 
     /**
-     * Set active
+     * Set isSystemAccount
      *
-     * @param boolean $active
+     * @param boolean $isSystemAccount
      * @return User
      */
-    public function setActive($active)
+    public function setIsSystemAccount($isSystemAccount)
     {
-        $this->active = $active;
+        $this->isSystemAccount = $isSystemAccount;
     
         return $this;
     }
 
     /**
-     * Get active
+     * Get isSystemAccount
      *
      * @return boolean 
      */
-    public function getActive()
+    public function getIsSystemAccount()
     {
-        return $this->active;
-    }
-
-    /**
-     * Set systemAccount
-     *
-     * @param boolean $systemAccount
-     * @return User
-     */
-    public function setSystemAccount($systemAccount)
-    {
-        $this->systemAccount = $systemAccount;
-    
-        return $this;
-    }
-
-    /**
-     * Get systemAccount
-     *
-     * @return boolean 
-     */
-    public function getSystemAccount()
-    {
-        return $this->systemAccount;
+        return $this->isSystemAccount;
     }
 
 
@@ -977,6 +987,42 @@ class User extends BaseUser
     {
         return $this->messages;
     }
+
+
+    /**
+     * Add comments
+     *
+     * @param \Eeemarv\EeemarvBundle\Entity\Comment $comment
+     * @return User
+     */
+    public function addComments(\Eeemarv\EeemarvBundle\Entity\Comment $comment)
+    {
+        $this->comments[] = $comment;
+    
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \Eeemarv\EeemarvBundle\Entity\Comment $comment
+     */
+    public function removeComments(\Eeemarv\EeemarvBundle\Entity\Comment $comment)
+    {
+        $this->messages->removeElement($comment);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+
 
     /**
      * Add nonce
@@ -1305,5 +1351,166 @@ class User extends BaseUser
     public function removeNonce(\Eeemarv\EeemarvBundle\Entity\UserNonce $nonces)
     {
         $this->nonces->removeElement($nonces);
+    }
+
+    /**
+     * Set isSystem
+     *
+     * @param boolean $isSystem
+     * @return User
+     */
+    public function setIsSystem($isSystem)
+    {
+        $this->isSystem = $isSystem;
+    
+        return $this;
+    }
+
+    /**
+     * Get isSystem
+     *
+     * @return boolean 
+     */
+    public function getIsSystem()
+    {
+        return $this->isSystem;
+    }
+
+    /**
+     * Set isActive
+     *
+     * @param boolean $isActive
+     * @return User
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+    
+        return $this;
+    }
+
+    /**
+     * Get isActive
+     *
+     * @return boolean 
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * Set isLeaving
+     *
+     * @param boolean $isLeaving
+     * @return User
+     */
+    public function setIsLeaving($isLeaving)
+    {
+        $this->isLeaving = $isLeaving;
+    
+        return $this;
+    }
+
+    /**
+     * Get isLeaving
+     *
+     * @return boolean 
+     */
+    public function getIsLeaving()
+    {
+        return $this->isLeaving;
+    }
+
+    /**
+     * Set isLeavingSince
+     *
+     * @param \DateTime $isLeavingSince
+     * @return User
+     */
+    public function setIsLeavingSince($isLeavingSince)
+    {
+        $this->isLeavingSince = $isLeavingSince;
+    
+        return $this;
+    }
+
+    /**
+     * Get isLeavingSince
+     *
+     * @return \DateTime 
+     */
+    public function getIsLeavingSince()
+    {
+        return $this->isLeavingSince;
+    }
+
+    /**
+     * Set isLeavingSetBy
+     *
+     * @param \Eeemarv\EeemarvBundle\Entity\User $isLeavingSetBy
+     * @return User
+     */
+    public function setIsLeavingSetBy(\Eeemarv\EeemarvBundle\Entity\User $isLeavingSetBy = null)
+    {
+        $this->isLeavingSetBy = $isLeavingSetBy;
+    
+        return $this;
+    }
+
+    /**
+     * Get isLeavingSetBy
+     *
+     * @return \Eeemarv\EeemarvBundle\Entity\User 
+     */
+    public function getIsLeavingSetBy()
+    {
+        return $this->isLeavingSetBy;
+    }
+
+    /**
+     * Set externalPassword
+     *
+     * @param string $externalPassword
+     * @return User
+     */
+    public function setExternalPassword($externalPassword)
+    {
+        $this->externalPassword = $externalPassword;
+    
+        return $this;
+    }
+
+    /**
+     * Get externalPassword
+     *
+     * @return string 
+     */
+    public function getExternalPassword()
+    {
+        return $this->externalPassword;
+    }
+
+    /**
+     * Set isExternal
+     *
+     * @param boolean $isExternal
+     * @return User
+     */
+    public function setIsExternal($isExternal)
+    {
+        $this->isExternal = $isExternal;
+    
+        return $this;
+    }
+
+    /**
+     * Get isExternal
+     *
+     * @return boolean 
+     */
+    public function getIsExternal()
+    {
+        return $this->isExternal;
     }
 }

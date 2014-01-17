@@ -28,13 +28,20 @@
 {{ form_errors(form.message) }}
 {{ form_widget(form.message) }}
 
+{{ form_label(form.recaptcha) }}
+{{ form_errors(form.recaptcha) }}
+{{ form_widget(form.recaptcha) }}
 
+
+{{ form_widget(form.send, {'attr':{'class':'btn btn-primary top-10'}}) }}
 
 {{ form_rest(form) }}
 
+{#
 <div>
 	<input type="submit" value="{{ 'button.send'|trans }}" class="btn btn-primary top-10"/>
 </div>
+#}
 </form>
 
 

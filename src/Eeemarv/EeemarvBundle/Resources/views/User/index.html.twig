@@ -1,7 +1,58 @@
-{% extends '::base.html.twig' %}
+{% extends 'EeemarvBundle::base.html.twig' %}
 
-{% block body -%}
-    <h1>User list</h1>
+
+{% block page_header_inner %}{{ 'users'|trans }}{% endblock %}
+{% block buttons %}
+	<a href="{{ path('eeemarv_eeemarv_user_new') }}" class="btn btn-success">{{ 'new'|trans }}</a>
+{% endblock %} 
+
+
+
+
+
+{% block inner_content %}
+{# {{ knp_pagination_render(pagination, null, {}, {'alignment': 'right'}) }} #}
+{% set new_user_time = 'now'|date('U') - (86400 * new_user_days) %}
+
+    <table class="table table-striped table-condensed">
+        <thead>
+            <tr><th>
+				<div class="row-fluid">				
+                    <div class="span2">{{ 'code'|trans }}</div> 				
+					<div class="span4">{{ 'username'|trans }}</div>
+					<div class="span2">{{ 'balance'|trans }}</div>
+					<div class="span2">{{ 'distance'|trans }}</div>
+					<div class="span2">{{ 'messages'|trans }}</div>
+					
+				</div> 
+            </th></tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr{% if not user.isActive %} class="inactive"{% elseif user.isSystemAccount %} class="info"{% elseif user.externalPassword %} class="warning"{% elseif user.isLeaving %} class="error"{% elseif (user.activatedAt|date('U') > new_user_time) and user.isActive %} class="success"{% endif %}>
+            <td>
+ 				<div class="row-fluid">				
+                    <div class="span2"><a href="{{ path('eeemarv_eeemarv_user_show', { 'code': user.code }) }}">{{ user.code|e }}</a></div> 				
+					<div class="span4"><a href="{{ path('eeemarv_eeemarv_user_show', { 'code': user.code }) }}">{{ user.username|e }}</a></div>
+					<div class="span2"><a href="{{ path('eeemarv_eeemarv_transaction_user', { 'code': user.code }) }}">{{ user.balance // currency_rate }}</a></div>
+					<div class="span2">{{ user.distance|distance }}</div>
+					<div class="span2">{% if user.messageCount %}<a href="{{ path('eeemarv_eeemarv_message_user', { 'code': user.code }) }}">{{ user.messageCount }}</a>{% else %}0{% endif %}</div>
+				</div>              
+            </td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{# {{ knp_pagination_render(pagination, null, {}, {'alignment': 'right'}) }}    #}
+    
+    {% endblock %}
+
+
+
+{#
+{% extends 'EeemarvBundle::base.html.twig' %}
+
+{% block inner_content %}
+    <h4>{{ 'users'|trans }}</h4>
 
     <table class="records_list">
         <thead>
@@ -43,17 +94,17 @@
         <tbody>
         {% for entity in entities %}
             <tr class="{{ cycle( ['even', 'odd'], loop.index ) }}">
-                <td><img src="{% if entity.getWebImagePath() %}{{ (entity.getWebImagePath()) | imagine_filter('thumb60x60') }}{% endif %}" width="60" heigth="60"/></td>           
-                <td><a href="{{ path('lets_transact_admin_users_show', { 'slug': entity.slug }) }}">{{ entity.code }}<br/>
+                <td>{#<img src="{% if entity.getWebImagePath() %}{{ (entity.getWebImagePath()) | imagine_filter('thumb60x60') }}{% endif %}" width="60" heigth="60"/> </td>           
+                <td><a href="{{ path('eeemarv_eeemarv_user_show', { 'code': entity.code }) }}">{{ entity.code }}<br/>
                 {{ entity.username }}</a><br/>
-                {% if entity.active %}A {% endif %}
-                {% if entity.system %}S {% endif %}
-                {% if entity.quitting %}Q {% endif %}
+                {% if entity.activated %}A {% endif %}
+                {% if entity.isSystemAccount %}S {% endif %}
+               {# {% if entity.quitting %}Q {% endif %} 
                 {{ entity.locale }}                
                 </td>
 
-                <td>{{ entity.phone }} [{{ entity.showPhone }}]<br/>
-                {{ entity.mobile }} [{{ entity.showMobile }}]<br/>                                
+                <td>{{ entity.phone }} {# {{ entity.showPhone }} <br/>
+                {{ entity.mobile }}  {# {{ entity.showMobile }} <br/>                                
                 {{ entity.email }}<br/>
                 {{ entity.website }}</td>                
                                 
@@ -69,9 +120,9 @@
 
                 <td>{{ entity.street }}
                 {{ entity.houseNumber }} 
-                {{ entity.bus }}<br/>
+                {{ entity.box }}<br/>
                 {{ entity.place.postalCode }}
-                {{ entity.place.name }} [{{ entity.showAddress }}]</td>
+                {{ entity.place.name }} {# {{ entity.showAddress }} </td>
 
 
                 
@@ -87,11 +138,11 @@
                 <td>
                 <ul>
                     <li>
-                        <a href="{{ path('lets_transact_users_show', { 'slug': entity.slug }) }}">show</a>
+                        <a href="{{ path('eeemarv_eeemarv_user_show', { 'code': entity.code }) }}">show</a>
                     </li>
-                    <li>
-                        <a href="{{ path('lets_transact_users_edit', { 'slug': entity.slug }) }}">edit</a>
-                    </li>
+                {#    <li>
+                        <a href="{{ path('eeemarv_eeemarv_user_edit', { 'code': entity.code }) }}">edit</a>
+                    </li> 
                 </ul>
                 </td>
             </tr>
@@ -100,10 +151,12 @@
     </table>
 
         <ul>
-        <li>
-            <a href="{{ path('lets_transact_users_new') }}">
+ {#       <li>
+            <a href="{{ path('eeemarv_eeemarv_user_new') }}">
                 Create a new entry
             </a>
-        </li>
+        </li> 
     </ul>
-    {% endblock %}
+    {% endblock inner_content %}
+    
+#}

@@ -1,0 +1,49 @@
+{% extends 'EeemarvBundle::base.html.twig' %}
+
+{% block page_header_inner %}{{ 'pages'|trans }}{% endblock %}
+
+{% block buttons %}
+	<a href="{{ path('eeemarv_eeemarv_page_new') }}" class="btn btn-success">{{ 'new'|trans }}</a>
+{% endblock %} 
+
+
+{% block inner_content -%}
+
+<table class="table table-striped table-condensed">
+  <tbody>
+    {% for page in pages %}
+ <form action="{{ path('eeemarv_eeemarv_page_button', { 'slug': page.slug }) }}" method="POST">   
+    
+      <tr{% if not page.published %} class="inactive"{% endif %}>
+        <td class="span6">
+          <a href="{{ path('eeemarv_eeemarv_page_show', { 'slug': page.slug }) }}">{{ page.subject }}</a>
+		</td class="span6">
+		<td>
+
+<div class="span12">
+	<div class="span1">{% if not page.protected %}<button class="btn btn-mini{% if page.published %} btn-inverse{% endif %}" name="delete" value="{% if page.published %}hide{% else %}publish{% endif %}"><i class="fa fa-eye"></i></button>{% endif %}</div>
+	
+	<div class="span1">{% if not loop.last %}<button class="btn btn-primary btn-mini" name="down" value="down"><i class="fa fa-chevron-down"></i></button>{% endif %}</div>
+	<div class="span1">{% if not loop.first %}<button class="btn btn-primary btn-mini" name="up" value="up"><i class="fa fa-chevron-up"></i></button>{% endif %}</div>
+
+
+	<div class="span1">{% if not page.protected %}<button class="btn btn-danger btn-mini" name="delete" value="delete"><i class="fa fa-times"></i></button>{% endif %}</div>
+</div>
+
+
+
+		
+		</td>			
+      </tr>
+      </form>
+    {% endfor %}
+    <tr>
+    <td>
+ 	<div class="span1"><button class="btn btn-success btn-mini" name="add" value="add" title="{{ 'page.add'|trans }}"><i class="fa fa-plus"></i></button></div>
+    </td>
+    <td></td>
+    </tr>
+  </tbody>
+</table>
+  
+{% endblock %}

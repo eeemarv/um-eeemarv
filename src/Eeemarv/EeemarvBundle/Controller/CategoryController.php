@@ -42,24 +42,11 @@ class CategoryController extends Controller
      */
     public function indexAction()
     {
-		$cats = $this->repo->findBy(array(), array('left' => 'asc');
+		$categories = $this->repo->findBy(array(), array('left' => 'asc'));
 
-		$categories = $level_ref = array();
-
-		foreach ($cats as $key => $cat)
-		{
-			$level = $cat['level'];
-			if ($level){
-				$level_ref[$level - 1]['children'][$key] = $cat;
-				$level_ref[$level] = &$level_ref[$level - 1]['children'][$key];
-				$level_ref[$level]['children'] = array();
-				
-			} else {
-				$categories[$key] = $cat;
-				$categories[$key]['children'] = array();
-				$level_ref[$level] = &$categories[$key];
-			}
-		}	
+		if (!sizeof($categories)){
+			$categories = $this->createRoot();
+		}
 
         return array('categories' => $categories);
     }
@@ -77,13 +64,11 @@ class CategoryController extends Controller
         $form->bind($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);                                 
-            $em->flush();
-            
-			$this->recoverTree($em);            
+            $this->em->persist($entity);                                 
+            $this->em->flush();
+			$this->recoverTree();            
 	
-            return $this->redirect($this->generateUrl('eeemarv_categories_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('eeemarv_eeemarv_category_index'));
         }
 
         return $this->render('EeemarvBundle:Category:new.html.twig', array(
@@ -92,32 +77,30 @@ class CategoryController extends Controller
         ));
     }
 
-    /**.
-     * @Secure(roles="ROLE_ADMIN")
+    /**
+     * Secure(roles="ROLE_ADMIN")
      * @Template
+     * @Route("/categories/{id}/new")
+     * @Method({"GET"})
+     * @ParamConverter
      */
-    public function newAction($parent_id)
+    public function newAction(Category $parentCategory)
     {
-        $entity = new Category();
-        
-		if ($parent_id){
-			list($em, $repo, $parentCategory) = $this->find($parent_id); 
-			$entity->setParent($parentCategory);
-		}	
-        
-        $form   = $this->createForm('eeemarv_category_type', $entity);
-
+        $category = new Category();
+        $category->setParent($parentCategory);
+        $form   = $this->createForm('eeemarv_category_type', $category);
         return array(
-            'entity' => $entity,
+            'entity' => $category,
             'form'   => $form->createView(),
 			);
     }
 
     /**
-     * @Secure(roles="ROLE_ADMIN")
+     * Secure(roles="ROLE_ADMIN")
      * @Template
-     * @Route("/categories/{slug}")
+     * @Route("/categories/{id}", requirements={"id"="\d+"})
      * @Method({"GET"})
+     * @ParamConverter
      */
     public function showAction(Category $category)
     {
@@ -132,71 +115,73 @@ class CategoryController extends Controller
     }
 
     /**
-     * Displays a form to edit an existing Category entity.
-     * @Secure(roles="ROLE_ADMIN")
+     * Secure(roles="ROLE_ADMIN")
      * @Template
+     * @Route("/categories/{id}/edit", requirements={"id"="\d+"})
+     * @Method({"GET"})
+     * @ParamConverter
      */
-    public function editAction($id)
+    public function editAction(Request $request, Category $category)
     {
-		list($em, $repo, $entity) = $this->find($id);
-
-        $editForm = $this->createForm('eeemarv_category_type', $entity);
-        $deleteForm = $this->createDeleteForm($id);
-
+		if (!$category->getLevel()){
+			$request->getSession()->getFlashBag()->add('error', 'flash.error.edit.root');
+			return $this->redirect($this->generateUrl('eeemarv_eeemarv_category_index'));
+		}	
+		
+        $form = $this->createForm('eeemarv_category_type', $category);
+		
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'entity'      => $category,
+            'form'   => $form->createView(),
 			);
     }
 
     /**
-     * Edits an existing Category entity.
-     * @Secure(roles="ROLE_ADMIN")
+     * Secure(roles="ROLE_ADMIN")
+     * @Template
+     * @Route("/categories/{id}", requirements={"id"="\d+"})
+     * @Method({"PUT"})
+     * @ParamConverter
      */
-    public function updateAction(Request $request, $id)
+    public function updateAction(Request $request, Category $category)
     {
-		list($em, $repo, $entity) = $this->find($id);
-
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm('eeemarv_category_type', $entity);
+        $editForm = $this->createForm('eeemarv_category_type', $category);
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
-            $em->persist($entity);
-            $em->flush();
-            
-            $this->recoverTree($em); 
-
-            return $this->redirect($this->generateUrl('eeemarv_categories'));
+            $this->em->persist($category);
+            $this->em->flush();
+            $this->recoverTree(); 
+			$request->getSession()->getFlashBag()->add('success', 'flash.success.edit.category');
+            return $this->redirect($this->generateUrl('eeemarv_eeemarv_category_index'));
         }
 
         return $this->render('EeemarvBundle:Category:edit.html.twig', array(
-            'entity'      => $entity,
+            'entity'      => $category,
             'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
         ));
     }
 
     /**
      * Deletes a Category entity.
      * @Secure(roles="ROLE_ADMIN")
+     * @Template
+     * @Route("/categories/{id}", requirements={"id"="\d+"})
+     * @Method({"DELETE"})
+     * @ParamConverter
      */
-    public function deleteAction(Request $request, $id)
+    public function deleteAction(Request $request, $category)
     {
-        $form = $this->createDeleteForm($id);
+        $form = $this->createDeleteForm($category->getId());
         $form->bind($request);
 
         if ($form->isValid()) {
-			list($em, $repo, $entity) = $this->find($id);
-
-            $em->remove($entity);
-            $em->flush();
-
-			$this->recoverTree($em);
+            $this->em->remove($entity);
+            $this->em->flush();
+			$this->recoverTree();
         }
 
-        return $this->redirect($this->generateUrl('eeemarv_categories'));
+        return $this->redirect($this->generateUrl('eeemarv_eeemarv_category_index'));
     }
 
     /**
@@ -211,128 +196,103 @@ class CategoryController extends Controller
         ;
     }
     
-    private function recoverTree($em)
-    {
-		$repo = $em->getRepository('EeemarvBundle:Category');
-		$repo->verify();
-		$repo->recover();
-		$em->clear();
-		$em->flush(); 	
-	}
 
 	/** 
 	 * Secure(roles="ROLE_ADMIN")
+	 * @ParamConverter 
 	 */
-	public function AddChildAction($id)
+	public function sortChildrenAction(Category $category)
 	{
-		list($em, $repo, $entity) = $this->find($id);
-
-		// todo
-
-		$this->recoverTree($em);
-        return $this->redirect($this->generateUrl('eeemarv_categories'));
+		$this->repo->reorder($category, 'name', 'asc', false);
+		$this->em->clear();		
+		$this->recoverTree();	
+        return $this->redirect($this->generateUrl('eeemarv_eeemarv_category_index'));
 	}	
 
 	/** 
 	 * Secure(roles="ROLE_ADMIN")
+	 * @ParamConverter
 	 */
-	public function sortChildrenAction($id)
+	public function upAction(Category $category)
 	{
-		list($em, $repo, $entity) = $this->find($id);
-		
-		$repo->reorder($entity, 'name', 'asc', false);
-		$em->clear();		
-		$this->recoverTree($em);	
-        return $this->redirect($this->generateUrl('eeemarv_categories'));
-	}	
-
-	/** 
-	 * Secure(roles="ROLE_ADMIN")
-	 */
-	public function upAction($id)
-	{
-		list($em, $repo, $entity) = $this->find($id);
-		
-		$repo->moveUp($entity);
-		$this->recoverTree($em);
-        return $this->redirect($this->generateUrl('eeemarv_categories'));
+		$this->repo->moveUp($category);
+		$this->recoverTree();
+        return $this->redirect($this->generateUrl('eeemarv_eeemarv_category_index'));
 	}	
 	
 	/** 
-	 * @Secure(roles="ROLE_ADMIN")
+	 * Secure(roles="ROLE_ADMIN")
+	 * @ParamConverter 
 	 */
-	public function downAction($id)
+	public function downAction(Category $category)
 	{
-		list($em, $repo, $entity) = $this->find($id);
-		
-		$repo->moveDown($entity);
-		$this->recoverTree($em);
-        return $this->redirect($this->generateUrl('eeemarv_categories'));
+		$this->repo->moveDown($category);
+		$this->recoverTree();
+        return $this->redirect($this->generateUrl('eeemarv_eeemarv_category_index'));
 	}	
 	
 	/** 
-	 * @Secure(roles="ROLE_ADMIN")
+	 * Secure(roles="ROLE_ADMIN")
+	 * @ParamConverter
 	 */
-	public function rightAction($id)
-	{
-		list($em, $repo, $entity) = $this->find($id);
-		 
-		$prevSiblings = $repo->getPrevSiblings($entity);  //
+	public function rightAction(Category $category)
+	{	 
+		
+		$prevSiblings = $this->repo->getPrevSiblings($category);  //
 		
 		if (!sizeof($prevSiblings)){
 			// exception
 		}	 
-		    
-        $repo->persistAsLastChildOf($entity, end($prevSiblings));
-        $em->flush();
-        $this->recoverTree($em);
-        return $this->redirect($this->generateUrl('eeemarv_categories'));
+    
+        $this->repo->persistAsLastChildOf($category, end($prevSiblings));
+        $this->em->flush();
+        $this->recoverTree();
+        return $this->redirect($this->generateUrl('eeemarv_eeemarv_category_index'));
 	}	
 	
 	/** 
-	 * @Secure(roles="ROLE_ADMIN")
+	 * Secure(roles="ROLE_ADMIN")
+	 * @ParamConverter
 	 */
-	public function leftAction($id)
+	public function leftAction(Category $category)
 	{
-		list($em, $repo, $entity) = $this->find($id);
-
-        if ($entity->getLevel() < 2){
+        if ($category->getLevel() < 2){
 			// todo exception
 			exit;
 		}
-		$repo->persistAsNextSiblingOf($entity, $entity->getParent());
-        $em->flush(); 
-		$this->recoverTree($em);	
+		$this->repo->persistAsNextSiblingOf($category, $category->getParent());
+        $this->em->flush(); 
+		$this->recoverTree();	
 
-        return $this->redirect($this->generateUrl('eeemarv_categories'));		
+        return $this->redirect($this->generateUrl('eeemarv_eeemarv_category_index'));		
 	}
 
     /**
      * Deletes a Category entity.
-     * @Secure(roles="ROLE_ADMIN")
+     * Secure(roles="ROLE_ADMIN")
+     * @ParamConverter 
      */
-    public function removeAction(Request $request, $id)
+    public function removeAction(Request $request, Category $category)
     {
-		list($em, $repo, $entity) = $this->findOneBySlug($id);
-
-		
 		// todo : exceptions
 
-		$em->remove($entity);
-		$em->flush();
+		$this->em->remove($category);
+		$this->em->flush();
+		$this->recoverTree();
 
-		$this->recoverTree($em);
-
-        return $this->redirect($this->generateUrl('eeemarv_eeemarv_categories_index'));
+        return $this->redirect($this->generateUrl('eeemarv_eeemarv_category_index'));
     }
 
 	/** 
-	 * @Secure(roles="ROLE_ADMIN")
+	 * Secure(roles="ROLE_ADMIN")
+     * @Route("/categories/{id}/button", requirements={"id"="\d+"})
+     * @Method({"POST"})
+     * @ParamConverter
 	 */
 	public function buttonAction(Request $request, $id)
 	{
 		if ($request->get('add', null)) {
-            return $this->redirect($this->generateUrl('eeemarv_categories_new', array('id' => $id)));
+            return $this->redirect($this->generateUrl('eeemarv_eeemarv_category_new', array('id' => $id)));
 		}
 		if ($request->get('sort', null)) {
             return $this->forward('EeemarvBundle:Category:sortChildren', array('id' => $id));
@@ -350,25 +310,32 @@ class CategoryController extends Controller
             return $this->forward('EeemarvBundle:Category:left', array('id' => $id));
 		}
 		if ($request->get('edit', null)) {
-            return $this->redirect($this->generateUrl('eeemarv_categories_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('eeemarv_eeemarv_category_edit', array('id' => $id)));
 		}
 		if ($request->get('delete', null)) {
             return $this->forward('EeemarvBundle:Category:remove', array('id' => $id));
 		}
 
-        return $this->redirect($this->generateUrl('eeemarv_eeemarv_categories_index'));		
+        return $this->redirect($this->generateUrl('eeemarv_eeemarv_category_index'));		
 	}
 
+
+
+    private function recoverTree()
+    {
+		$this->repo->verify();
+		$this->repo->recover();
+		$this->em->clear();
+		$this->em->flush(); 	
+	}
 	
-	private function find($id)
+	private function createRoot()
 	{
-		$entity = $this->repo->find($id);
- 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Category entity.');
-        }
-		
-		return $entity;
+		$category = new Category();
+		$category->setName('[root]');  // translate default lang?
+		$this->em->persist($category);
+		$this->em->flush();
+		return $this->repo->findBy(array(), array('left' => 'asc'));
 	}	
 	
 		

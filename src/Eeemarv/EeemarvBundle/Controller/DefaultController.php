@@ -50,31 +50,6 @@ class DefaultController extends Controller
 
         return array('form' => $form->createView());
     }	
-	
-	
-	
-	
-     /**
-     * @Secure(roles="IS_AUTHENTICATED_ANONYMOUSLY")
-     * @Template
-     * @Route("/", defaults={"slug"="home"})
-     * @Route("/{slug}")
-     * @Method({"GET"})
-     * ParamConverter("messageTranslation", options{"mapping":{"_locale":"locale", "slug", "slug"}})
-     */		
-	
-    public function pageAction(MessageTranslation $messageTranslation)
-    {
-		
-	
-        return array('messageTranslation' => $messageTranslation);
-    }
- 
- 
-  
-
-
-
 }
 
 

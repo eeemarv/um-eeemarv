@@ -1,0 +1,20 @@
+{% extends 'EeemarvBundle::base.html.twig' %}
+{# {% form_theme form 'EeemarvBundle:Form:fields.html.twig' %} #}
+
+{% block title_extra %} {{ page.subject }}{% endblock %}
+
+{% block buttons %}
+<form action="{{ path('eeemarv_eeemarv_page_delete', { 'slug': page.slug }) }}" method="post">
+	<input type="hidden" name="_method" value="DELETE" />
+	{{ form_widget(delete_form) }}
+	<a href="{{ path('eeemarv_eeemarv_page_edit', { 'slug': page.slug }) }}" class="btn btn-info">{{ 'edit'|trans }}</a>
+	<button type="submit" class="btn btn-danger">{{ 'delete'|trans }}</button>         
+</form>	
+{% endblock %} 
+
+
+{% block inner_content -%}
+
+<div>{{ page.content|raw }}</div>
+
+{%- endblock %}

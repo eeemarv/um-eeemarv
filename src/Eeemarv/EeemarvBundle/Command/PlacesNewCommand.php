@@ -87,7 +87,7 @@ class PlacesNewCommand extends ContainerAwareCommand
 					if (strlen($countryCode) > 2) {
                         throw new \Exception('Country code can only be two characters');
                     }
-                    return strtolower($countryCode);
+                    return strtoupper($countryCode);
                 },
                 2
             );

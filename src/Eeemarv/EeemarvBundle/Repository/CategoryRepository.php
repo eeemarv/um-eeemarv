@@ -2,11 +2,11 @@
 
 namespace Eeemarv\EeemarvBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
+//use Doctrine\ORM\EntityRepository;
+use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 
-
-class CategoryRepository extends EntityRepository
+class CategoryRepository extends NestedTreeRepository
 {
 
 /*

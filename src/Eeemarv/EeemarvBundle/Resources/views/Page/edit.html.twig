@@ -1,0 +1,44 @@
+{% extends 'EeemarvBundle::base.html.twig' %}
+
+{% block page_header_inner %}{{ 'edit'|trans }}: {{ page.subject }}{% endblock %}
+
+{% block inner_content -%}
+
+    <form action="{{ path('eeemarv_eeemarv_page_update', { 'slug': page.slug }) }}" method="post" {{ form_enctype(edit_form) }}>
+        <input type="hidden" name="_method" value="PUT" />
+        
+        <div class="row-fluid">
+
+			{{ form_widget(edit_form.subject, {'attr': {'class': 'span12', 'placeholder': 'subject' }}) }}
+        </div>
+
+        <div class="row-fluid">
+			{{ form_widget(edit_form.content, {'attr': {'class': 'span12'}}) }}
+
+        </div>
+                
+        
+   
+        {{ form_widget(edit_form) }}
+        
+      
+        {{ form_rest(edit_form) }}
+        
+        <p>
+            <button type="submit" class="btn btn-primary">{{ 'edit'|trans }}</button>
+        </p>
+    </form>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('eeemarv_eeemarv_page_index') }}">
+            {{ 'back_to_list'|trans }}
+        </a>
+    </li>
+</ul>
+
+
+
+
+
+{% endblock %}

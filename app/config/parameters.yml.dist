@@ -28,6 +28,9 @@ parameters:
     unique_id: UniqueIdToIdentifyYourLetsGroup123   #random base64 id, should never be changed after initial setup
     code: ylc                                       #lower case characters and numbers only, maximum length = 8
     currency_rate: 60                               #divider to display your local lets-currency (internally Lets-seconds are used; 3600 units per hour)
+    
+    new_user_days: 60
+    country: ~   #country code of default country.
 
       
     

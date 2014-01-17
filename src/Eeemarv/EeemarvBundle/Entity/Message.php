@@ -2,16 +2,19 @@
 
 namespace Eeemarv\EeemarvBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 use Doctrine\ORM\Mapping as ORM;
+
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
-use Gedmo\Translatable\Translatable;
-use Doctrine\Common\Collections\ArrayCollection;
+
+
 
 /**
  * @ORM\Table(name="messages")
  * @ORM\Entity(repositoryClass="Eeemarv\EeemarvBundle\Repository\MessageRepository")
- * @Gedmo\TranslationEntity(class="Eeemarv\EeemarvBundle\Entity\MessageTranslation")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class Message
 {
@@ -28,20 +31,18 @@ class Message
     protected $uniqueId;
 
 	/**
-	 * @Gedmo\Translatable
 	 * @ORM\Column(type="string")
 	 */
 	protected $subject;
 	
 	/**
-	 * @Gedmo\Translatable
 	 * @Gedmo\Slug(fields={"subject"}) 
 	 * @ORM\Column(type="string", unique=true)
 	 */
 	protected $slug;	
 
 	/**
-	 * @Gedmo\Translatable
+	 * @Assert\NotBlank
 	 * @ORM\Column(type="text")
 	 */
 	protected $content;	
@@ -59,7 +60,7 @@ class Message
 	protected $user;
 
 	/**
-	 * @Assert\NotBlank
+	 * @Assert\NotBlank(groups={"new", "edit"})
 	 * @ORM\ManyToOne(targetEntity="Category", inversedBy="messages")
 	 * @ORM\JoinColumn(name="category_id")
 	 */
@@ -75,6 +76,17 @@ class Message
 	 * @ORM\Column(type="datetime", name="event_end_at", nullable=true)
 	 */
 	protected $eventEndAt = null;
+
+	/**
+	 * @ORM\Column(type="boolean", name="is_offer", nullable=true)
+	 */
+	protected $isOffer;
+
+	/**
+	 * @ORM\Column(type="boolean", name="is_want", nullable=true)
+	 */
+	protected $isWant;
+
 
 	/**
 	 * @ORM\Column(type="boolean")
@@ -96,16 +108,34 @@ class Message
 	 */
 	protected $published = false;
 
+
+
 	/**
 	 * @ORM\OneToMany(targetEntity="MessageImage", mappedBy="message")
 	 */
 	protected $images;
-	
 
 	/**
-	 * @ORM\Column(type="integer", name="view_count")
+	 * @ORM\OneToMany(targetEntity="Comment", mappedBy="message")
 	 */
-	protected $viewCount = 0;
+	protected $comments;
+	
+	/**
+	 * @ORM\Column(type="integer", name="comment_count")
+	 */
+	protected $commentCount = 0;
+	
+    /**
+     * @ORM\Column(name="last_comment_at", type="datetime", nullable=true)
+     */
+    protected $lastCommentAt;	
+
+	/**
+	 * @ORM\Column(type="boolean", name="is_commentable", nullable=true)
+	 */
+	protected $isCommentable;
+
+	
 	
 	/**
 	 * @ORM\OneToOne(targetEntity="User", mappedBy="profileMessage")
@@ -113,6 +143,10 @@ class Message
 	 */ 
 	protected $profileUser;	
 
+	/**
+	 * @ORM\OneToMany(targetEntity="Transaction", mappedBy="message")
+	 */
+	protected $transactions;
 
 	/**
 	 * @Gedmo\Timestampable(on="create")
@@ -138,24 +172,38 @@ class Message
 	 * @ORM\ManyToOne(targetEntity="User")
 	 * @ORM\JoinColumn(name="updated_by")
 	 */
-	protected $updatedBy;	
-	
-    /**
-     * @Gedmo\Locale
-     */
-    private $locale;	
-	
+	protected $updatedBy;
 
+	/**
+	 * @ORM\Column(type="boolean")
+	 */
+	protected $deleted = false;
+
+	
     /**
-	* @ORM\OneToMany(targetEntity="MessageTranslation", mappedBy="message", cascade={"persist", "remove"})
-	*/
-    private $translations;
+     * @Gedmo\Timestampable(on="change", field="deleted", value=true)
+     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
+     */
+    protected $deletedAt;
+    
+	/**
+	 * @ORM\Column(type="boolean")
+	 */
+	protected $valid = true;
+
+	
+    /**
+     * @Gedmo\Timestampable(on="change", field="valid", value=false)
+     * @ORM\Column(name="unvalidated_at", type="datetime", nullable=true)
+     */
+    protected $unvalidatedAt;    
     
 
     public function __construct()
     {
-        $this->translations = new ArrayCollection(); 
-        $this->images = new ArrayCollection();                                  
+        $this->images = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->transactions = new ArrayCollection();                                          
     }
 
 
@@ -438,30 +486,6 @@ class Message
 
 
     /**
-     * Set viewCount
-     *
-     * @param integer $viewCount
-     * @return Message
-     */
-    public function setViewCount($viewCount)
-    {
-        $this->viewCount = $viewCount;
-
-        return $this;
-    }
-
-    /**
-     * Get viewCount
-     *
-     * @return integer 
-     */
-    public function getViewCount()
-    {
-        return $this->viewCount;
-    }
-
-
-    /**
      * Set profileUser
      *
      * @param \Eeemarv\EeemarvBundle\Entity\User $profileUser
@@ -483,6 +507,42 @@ class Message
     {
         return $this->profileUser;
     }
+
+
+    /**
+     * Add transactions
+     *
+     * @param \Eeemarv\EeemarvBundle\Entity\Transaction $transactions
+     * @return Message
+     */
+    public function addTransaction(\Eeemarv\EeemarvBundle\Entity\Transaction $transactions)
+    {
+        $this->transactions[] = $transactions;
+
+        return $this;
+    }
+
+    /**
+     * Remove transactions
+     *
+     * @param \Eeemarv\EeemarvBundle\Entity\Transaction $transactions
+     */
+    public function removeTransaction(\Eeemarv\EeemarvBundle\Entity\Transaction $transactions)
+    {
+        $this->transactions->removeElement($transactions);
+    }
+
+    /**
+     * Get transactions
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTransactions()
+    {
+        return $this->transactions;
+    }
+
+
 
 
     /**
@@ -578,37 +638,53 @@ class Message
     }
 
     /**
-     * Add translations
+     * Set deletedAt
      *
-     * @param \Eeemarv\EeemarvBundle\Entity\MessageTranslation $translations
+     * @param \DateTime $deletedAt
      * @return Message
      */
-    public function addTranslation(\Eeemarv\EeemarvBundle\Entity\MessageTranslation $translations)
+    public function setDeletedAt($deletedAt)
     {
-        $this->translations[] = $translations;
-
+        $this->deletedAt = $deletedAt;
+        
         return $this;
     }
-
+    
     /**
-     * Remove translations
+     * Get deletedAt
      *
-     * @param \Eeemarv\EeemarvBundle\Entity\MessageTranslation $translations
+     * @return \DateTime 
      */
-    public function removeTranslation(\Eeemarv\EeemarvBundle\Entity\MessageTranslation $translations)
+    public function getDeletedAt()
     {
-        $this->translations->removeElement($translations);
+        return $this->deletedAt;
     }
 
+
     /**
-     * Get translations
+     * Set unvalidatedAt
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @param \DateTime $unvalidatedAt
+     * @return Message
      */
-    public function getTranslations()
+    public function setUnvalidatedAt($unvalidatedAt)
     {
-        return $this->translations;
+        $this->unvalidatedAt = $unvalidatedAt;
+        
+        return $this;
     }
+    
+    /**
+     * Get unvalidatedAt
+     *
+     * @return \DateTime 
+     */
+    public function getUnvalidatedAt()
+    {
+        return $this->unvalidatedAt;
+    }
+
+
 
     /**
      * Set subject
@@ -678,4 +754,201 @@ class Message
     {
         return $this->content;
     }
+
+    /**
+     * Add comments
+     *
+     * @param \Eeemarv\EeemarvBundle\Entity\Message $comments
+     * @return Message
+     */
+    public function addComment(\Eeemarv\EeemarvBundle\Entity\Message $comments)
+    {
+        $this->comments[] = $comments;
+    
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \Eeemarv\EeemarvBundle\Entity\Message $comments
+     */
+    public function removeComment(\Eeemarv\EeemarvBundle\Entity\Message $comments)
+    {
+        $this->comments->removeElement($comments);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * Set commentCount
+     *
+     * @param integer $commentCount
+     * @return Message
+     */
+    public function setCommentCount($commentCount = 0)
+    {
+        $this->commentCount = $commentCount;
+    
+        return $this;
+    }
+
+    /**
+     * Get commentCount
+     *
+     * @return integer
+     */
+    public function getCommentCount()
+    {
+        return $this->commentCount;
+    }
+
+    /**
+     * Set lastCommentAt
+     *
+     * @param \DateTime $lastCommentAt
+     * @return Message
+     */
+    public function setLastCommentAt($lastCommentAt)
+    {
+        $this->lastCommentAt = $lastCommentAt;
+        
+        return $this;
+    }
+    
+    /**
+     * Get lastCommentAt
+     *
+     * @return \DateTime 
+     */
+    public function getLastCommentAt()
+    {
+        return $this->lastCommentAt;
+    }
+
+    /**
+     * Set isCommentable
+     *
+     * @param boolean $isCommentable
+     * @return Message
+     */
+    public function setIsCommentable($isCommentable)
+    {
+        $this->isCommentable = $isCommentable;
+    
+        return $this;
+    }
+
+    /**
+     * Get isCommentable
+     *
+     * @return boolean 
+     */
+    public function getIsCommentable()
+    {
+        return $this->isCommentable;
+    }
+
+
+
+    /**
+     * Set isOffer
+     *
+     * @param boolean $isOffer
+     * @return Message
+     */
+    public function setIsOffer($isOffer)
+    {
+        $this->isOffer = $isOffer;
+    
+        return $this;
+    }
+
+    /**
+     * Get isOffer
+     *
+     * @return boolean 
+     */
+    public function getIsOffer()
+    {
+        return $this->isOffer;
+    }
+
+    /**
+     * Set isWant
+     *
+     * @param boolean $isWant
+     * @return Message
+     */
+    public function setIsWant($isWant)
+    {
+        $this->isWant = $isWant;
+    
+        return $this;
+    }
+
+    /**
+     * Get isWant
+     *
+     * @return boolean 
+     */
+    public function getIsWant()
+    {
+        return $this->isWant;
+    }
+
+    /**
+     * Set deleted
+     *
+     * @param boolean $deleted
+     * @return Message
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+    
+        return $this;
+    }
+
+    /**
+     * Get deleted
+     *
+     * @return boolean 
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+    
+    /**
+     * Set valid
+     *
+     * @param boolean $valid
+     * @return Message
+     */
+    public function setValid($valid)
+    {
+        $this->valid = $valid;
+    
+        return $this;
+    }
+
+    /**
+     * Get valid
+     *
+     * @return boolean 
+     */
+    public function getValid()
+    {
+        return $this->valid;
+    }    
+    
 }

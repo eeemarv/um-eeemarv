@@ -34,17 +34,22 @@ class TransactionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {					
         $builder
-            ->add('toCode')				         
+			->add('message', 'hidden_entity', array(
+				'class' => 'Eeemarv\EeemarvBundle\Entity\Message',
+				'required' => false,
+				))
+            ->add('toCode', 'eeemarv_code_type')				         
             ->add('amount', 'eeemarv_amount_type')
             ->add('description')
             ->add('uniqueId', 'hidden', array(
-				'data' => $this->uniqueIdGenerator->generateUniqueId(),
+				'data' => $this->uniqueIdGenerator->generate(),
 				))
+			->add('create', 'submit');
  //           ->addEventListener(
 		//		'',
 			//	array($this->transactionEventListener, 'method'),
 				//)//////////////////////////////////////////////////////////////
-            ;
+            
 
     }
 

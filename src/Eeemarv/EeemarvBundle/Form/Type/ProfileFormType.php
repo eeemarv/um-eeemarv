@@ -14,11 +14,11 @@ class ProfileFormType extends BaseType
     {	
 	
 		$builder
-			->add('image', 'file', array(
-				'required' => false))
+		/*	->add('image', 'file', array(
+				'required' => false))  */
 			->add('street')
 			->add('houseNumber')
-			->add('bus', 'text', array(
+			->add('box', 'text', array(
 				'required' => false))	
 			->add('place', 'entity', array(
 				'class' => 'EeemarvBundle:Place',

@@ -2,8 +2,10 @@
 
 namespace Eeemarv\EeemarvBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Translatable\Translatable;
 use Doctrine\Common\Collections\ArrayCollection;
+
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Vich\GeographicalBundle\Annotation as Vich;
@@ -14,7 +16,7 @@ use Vich\GeographicalBundle\Annotation as Vich;
  * @Gedmo\TranslationEntity(class="Eeemarv\EeemarvBundle\Entity\PlaceTranslation")
  * @Vich\Geographical(on="update") 
  */
-class Place
+class Place implements Translatable
 {
     /**
      * @ORM\Id
@@ -94,7 +96,7 @@ class Place
     private $locale;
     
     /**
-	* @ORM\OneToMany(targetEntity="PlaceTranslation", mappedBy="place", cascade={"persist", "remove"})
+	* @ORM\OneToMany(targetEntity="PlaceTranslation", mappedBy="object", cascade={"persist", "remove"})
 	*/
     private $translations;
    

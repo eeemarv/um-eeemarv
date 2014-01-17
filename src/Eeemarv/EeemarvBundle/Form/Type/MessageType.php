@@ -29,11 +29,23 @@ class MessageType extends AbstractType
     {
         $builder
 		//	->add('type', 'eeemarv_offer_want_type')  /// -> new datamodel ! (to do)
+		/*	->add('images', 'collection', array(
+				'allow_add' => true,
+				'allow_delete' => true,
+				'data' => 'Eeemarv\EeemarvBundle\Entity\MessageImage',
+				'type' => 'image',
+				'options' => array(
+					'required' => false,
+					'attr' => array()
+					
+					
+				))) */
             ->add('subject')
   			->add('category', 'entity', array(
 				'class' => 'EeemarvBundle:Category',
 				'empty_value' => '',
 				'empty_data' => null,
+				'property' => 'identedName',
 				'query_builder' => function(EntityRepository $er) {
 						return $er->createQueryBuilder('c')->orderBy('c.left', 'ASC');
 					},
@@ -41,10 +53,12 @@ class MessageType extends AbstractType
             ->add('content', 'eeemarv_ckeditor_type', array(
 				'config_name' => 'eeemarv_message',
 				))
-            ->add('price', 'eeemarv_amount_type')
+            ->add('price', 'eeemarv_amount_type', array(
+				'required' => false))
             ->add('uniqueId', 'hidden', array(
-				'data' => $this->uniqueIdGenerator->generateUniqueId(),
-				));
+				'data' => $this->uniqueIdGenerator->generate(),
+				))
+			->add('create', 'submit');
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

@@ -1,14 +1,37 @@
 {% extends 'EeemarvBundle::base.html.twig' %}
+{% form_theme form 'EeemarvBundle:Form:fields.html.twig' %}
+
 
 {% block page_header_inner %}{{ 'message_new'|trans }}{% endblock %}
 
 {% block inner_content -%}
 
     <form action="{{ path('eeemarv_eeemarv_message_create') }}" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-        <p>
-            <button type="submit">{{ 'create'|trans }}</button>
-        </p>
+        {{ form_errors(form) }}
+ 
+
+
+<input id="fileupload" type="file" name="files[]" data-url="{{ oneup_uploader_endpoint('gallery') }}" multiple />
+ 
+        
+        {{ form_label(form.subject) }}
+		{{ form_errors(form.subject) }}		
+		{{ form_widget(form.subject) }}
+        
+        {{ form_label(form.category) }}
+		{{ form_errors(form.category) }}		
+		{{ form_widget(form.category) }}        
+        
+        {{ form_label(form.content) }}
+		{{ form_errors(form.content) }}		
+		{{ form_widget(form.content) }}
+		
+        {{ form_label(form.price) }}
+		{{ form_errors(form.price) }}		
+		{{ form_widget(form.price) }}		
+        
+        {{ form_widget(form.create, {'attr':{'class': 'btn btn-success'}}) }}
+		{{ form_rest(form) }}
     </form>
 
         <ul class="record_actions">
@@ -18,4 +41,13 @@
         </a>
     </li>
 </ul>
+
+{% endblock %}
+
+{% block javascripts_extra %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#fileupload').fileupload({});
+});
+</script>
 {% endblock %}

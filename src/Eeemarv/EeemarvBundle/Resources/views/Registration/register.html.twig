@@ -22,14 +22,19 @@
 {{ form_errors(form.email) }}
 {{ form_widget(form.email) }}
 
+<div class="controls controls-row">
+<div class="span6">
 {{ form_label(form.firstName) }}
 {{ form_errors(form.firstName) }}
 {{ form_widget(form.firstName) }}
+</div>
 
+<div class="span6">
 {{ form_label(form.lastName) }}
 {{ form_errors(form.lastName) }}
 {{ form_widget(form.lastName) }}
-
+</div>
+</div>
 
 <div class="controls controls-row">
 
@@ -68,21 +73,28 @@
 {{ form_errors(form.place) }}
 {{ form_widget(form.place) }}
 
+
+<div class="controls controls-row">
+<div class="span6">
 {{ form_label(form.phone) }}
 {{ form_errors(form.phone) }}
 {{ form_widget(form.phone) }}
+</div>
 
-
+<div class="span6">
 {{ form_label(form.mobile) }}
 {{ form_errors(form.mobile) }}
 {{ form_widget(form.mobile) }}
+</div></div>
 
+
+{{ form_label(form.recaptcha) }}
+{{ form_errors(form.recaptcha) }}
+{{ form_widget(form.recaptcha) }}
+
+{{ form_widget(form.send, {'attr':{'class':'btn btn-primary top-10'}}) }}
 
 {{ form_rest(form) }}
-
-<div>
-	<input type="submit" value="{{ 'button.send'|trans }}" class="btn btn-primary top-10"/>
-</div>
 
 </form>
 

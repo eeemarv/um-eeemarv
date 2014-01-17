@@ -1,8 +1,16 @@
-{% extends "FOSUserBundle::base.html.twig" %}
+{% extends "EeemarvBundle::base.html.twig" %}
 
 
 
-{% block fos_user_content %}
+{% block inner_content %}
 
-{% include "FOSUserBundle:Profile:edit_content.html.twig" %}
-{% endblock fos_user_content %}
+<form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="POST" class="fos_user_profile_edit">
+
+    {{ form_widget(form) }}
+    <div>
+        <input type="submit" value="{{ 'profile.edit.submit'|trans({}, 'FOSUserBundle') }}" />
+    </div>
+</form>
+
+
+{% endblock  %}

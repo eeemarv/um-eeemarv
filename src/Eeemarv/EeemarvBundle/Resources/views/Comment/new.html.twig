@@ -1,0 +1,14 @@
+{% form_theme form 'EeemarvBundle:Form:fields.html.twig' %}
+
+{% for comment in comments %}
+<tr><td>{{ comment.content|strip_message|raw }}</td>
+<td>
+<p>{{ comment.createdAt|date }}</p>
+<p><a href="{{ path('eeemarv_eeemarv_user_show', { 'code': comment.createdBy.code }) }}">{{ comment.createdBy.code }} {{ comment.createdBy.username }}</a></p>
+</td></tr>
+{% endfor %}
+<tr><td colspan="2">
+<form action="{{ path('eeemarv_eeemarv_comment_create', { 'id': message.id }) }}" method="post">
+	{{ form_widget(form) }}        
+</form>
+</td></tr>

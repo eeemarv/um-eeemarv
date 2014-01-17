@@ -9,7 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity 
  * @ORM\Table(name="message_images")
- * @Gedmo\Uploadable(path="/uploads/images/messages", filenameGenerator="SHA1", maxSize="2000000")
+ * @Gedmo\Uploadable(path="/files", filenameGenerator="Eeemarv\EeemarvBundle\Util\FilenameGenerator", maxSize="200k", allowedTypes="jpg, png, jpeg, gif")
  */
 class MessageImage
 {
@@ -96,6 +96,8 @@ class MessageImage
     {
         return $this->path;
     }
+
+
 
     /**
      * Set size

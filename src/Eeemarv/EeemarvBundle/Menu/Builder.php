@@ -56,7 +56,7 @@ class Builder
 
 		$item = $menu->addChild('personal', array('route' => 'fos_user_security_logout'))
 			->setLabel($code.' '.$userName);
-		$item->addChild('profile', array('route' => 'fos_user_profile_show'))
+		$item->addChild('profile', array('route' => 'eeemarv_eeemarv_user_show', 'routeParameters' => array('code' => $code)))
 			->setLabel($this->translator->trans('profile'));
 		$item->addChild('dl', array('attributes' => array('divider' => true)));					
 		$item->addChild('logout', array('route' => 'fos_user_security_logout'))
@@ -72,6 +72,7 @@ class Builder
     {
         $menu = $this->factory->createItem('root');
 
+		$menu->setCurrentUri($request->getRequestUri()); //
 
 		$menu->addChild('messages', array('route' => 'eeemarv_eeemarv_message_index'))
 			->setLabel($this->translator->trans('messages'));

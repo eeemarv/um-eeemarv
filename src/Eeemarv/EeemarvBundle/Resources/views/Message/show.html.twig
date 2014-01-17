@@ -1,41 +1,101 @@
 {% extends 'EeemarvBundle::base.html.twig' %}
+{# {% form_theme form 'EeemarvBundle:Form:fields.html.twig' %} #}
 
-{% block page_header_inner %}{{ entity.subject }}{% endblock %}
+{% block page_header_inner %}{{ message.subject }}{% endblock %}
+{% block buttons %}
+<form action="{{ path('eeemarv_eeemarv_message_delete', { 'id': message.id }) }}" method="post">
+	<input type="hidden" name="_method" value="DELETE" />
+	{{ form_widget(delete_form) }}
+	<a href="{{ path('eeemarv_eeemarv_message_edit', { 'id': message.id }) }}" class="btn btn-info">{{ 'edit'|trans }}</a>
+	<button type="submit" class="btn btn-danger">{{ 'delete'|trans }}</button>         
+</form>	
+{% endblock %} 
+
+
+
 
 {% block inner_content -%}
 
-<div>{{ entity.text|strip_message|raw }}</div>
+
+<div class="row-fluid">				
+	<div class="span12"><a href="{{ path('eeemarv_eeemarv_message_index', { 'category': message.category }) }}">{{ message.category }}</a></div> 				
+{#	<div class="span4"><a href="{{ path('eeemarv_eeemarv_user_show', { 'code': message.user.code }) }}">{{ message.user.username|e }}</a></div>
+	<div class="span2">{{ message.user.balance // currency_rate }}</div>
+	<div class="span2">{{ message.user.distance|distance }}</div> #}
+{#	<div class="span2">{{ message.user.messageCount }}</div> #}
+</div>
+<div class="row-fluid">				
+	<div class="span4"><a href="{{ path('eeemarv_eeemarv_user_show', { 'code': message.user.code }) }}">{{ message.user.code|e }} {{ message.user.username|e }}</a></div> 				
+
+	<div class="span2">{{ message.user.balance // currency_rate }}</div>
+{#	<div class="span2">{{ message.user.distance|distance }}</div> #}
+{#	<div class="span2">{{ message.user.messageCount }}</div> #}
+</div>
+   
+
+
+<div>{{ message.content|strip_message|raw }}</div>
 
     <table class="record_properties">
         <tbody>
             <tr>
                 <th>Amount</th>
-                <td>{{ entity.price // currency_rate }}</td>
+                <td>{{ message.price // currency_rate }}</td>
             </tr>
             <tr>
                 <th>Createdat</th>
-                <td>{{ entity.createdAt|date('Y-m-d') }}</td>
+                <td>{{ message.createdAt|date('Y-m-d') }}</td>
             </tr>
         </tbody>
     </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('eeemarv_eeemarv_message') }}">
-            {{ 'back_to_list'|trans }}
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('eeemarv_eeemarv_message_edit', { 'slug': entity.slug }) }}">
-            {{ 'edit'|trans }}
-        </a>
-    </li>
-    <li>
-        <form action="{{ path('eeemarv_eeemarv_message_delete', { 'slug': entity.slug }) }}" method="post">
-            <input type="hidden" name="_method" value="DELETE" />
-            {{ form_widget(delete_form) }}
-            <button type="submit">{{ 'delete'|trans }}</button>
-        </form>
-    </li>
-</ul>
+
+<a href="{{ path('eeemarv_eeemarv_transaction_newmessage', {'id': message.id }) }}" class="btn btn-success">{{ 'button.create_transaction_from_message'|trans }}</a>
+
+{% if true %}{# message.isCommentable #}
+<div>
+<table class="table table-striped table-bordered">
+<thead>
+	<tr><th class="span9"><h4>{{ 'comments'|trans }}</h4></th><th class="span3"></th></tr>
+</thead>
+<tbody id="comments">
+   <tr class="ajax-loader"><td colspan="2"><div></div></td></tr>
+</tbody></table>
+</div> 
+{% endif %}
+
+{% endblock %}
+{% block javascripts_extra %}
+<script>
+$('document').ready(function(){
+	$.get('{{ path('eeemarv_eeemarv_comment_new', {'id': message.id } ) }}')
+		.always(function(){
+			$('.ajax-loader').hide();
+		})			
+		.done(function(data){
+			$('.ajax-loader').before(data);	
+		});
+});
+$('tbody').on('submit', 'form', function(event){
+	event.preventDefault();
+	$(this).parent().parent().hide();
+	$('.ajax-loader').show();
+	$.ajax({
+		type: 'POST',
+		url: $(this).attr('action'),
+		data: $(this).serialize(),
+		success: function(){
+					
+		},
+		cache:false, 
+	})
+	.always(function(){
+		$('tbody form').parent().parent().remove();
+		$('.ajax-loader').hide();	
+	})
+	.done(function(data){
+			$('.ajax-loader').before(data);	
+	});
+});
+</script>
 {% endblock %}

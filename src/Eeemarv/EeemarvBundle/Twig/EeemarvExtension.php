@@ -36,7 +36,7 @@ class EeemarvExtension extends \Twig_Extension
 	{
 		$number = round($number, 1);
 		$number = ($number > 9.9) ? round($number) : $number;
-		$number = ($number > 0.9) ? $number . ' km' : ($number * 100) . ' m';
+		$number = ($number > 0.9) ? $number . ' km' : ($number * 1000) . ' m';
 		return $number;
 	}
 	

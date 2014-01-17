@@ -1,19 +1,117 @@
-{% extends '::base.html.twig' %}
+{% extends 'EeemarvBundle::base.html.twig' %}
+{% form_theme form 'EeemarvBundle:Form:fields.html.twig' %}
 
-{% block body -%}
-    <h1>User creation</h1>
+{% block page_header_inner %}{{ 'new_user'|trans  }}{% endblock %}
 
-    <form action="{{ path('lets_transact_users_create') }}" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-        <p>
-            <button type="submit">Create</button>
-        </p>
-    </form>
+
+{% block inner_content %}
+
+<form action="{{ path('eeemarv_eeemarv_user_create') }}" method="post" {{ form_enctype(form) }}>
+    
+{{ form_errors(form) }}
+
+{{ form_label(form.email) }}
+{{ form_errors(form.email) }}
+{{ form_widget(form.email) }}
+
+<div class="controls controls-row">
+<div class="span2">
+{{ form_label(form.code) }}
+{{ form_errors(form.code) }}
+{{ form_widget(form.code) }}
+</div>
+
+<div class="span10">
+{{ form_label(form.username) }}
+{{ form_errors(form.username) }}
+{{ form_widget(form.username) }}
+</div>
+</div>
+
+<div class="controls controls-row">
+<div class="span6">
+{{ form_label(form.firstName) }}
+{{ form_errors(form.firstName) }}
+{{ form_widget(form.firstName) }}
+</div>
+
+<div class="span6">
+{{ form_label(form.lastName) }}
+{{ form_errors(form.lastName) }}
+{{ form_widget(form.lastName) }}
+</div>
+</div>
+
+
+<div class="controls controls-row">
+
+{{ form_label(form.birthday) }}
+{{ form_errors(form.birthday) }}
+{{ form_widget(form.birthday) }}
+
+{# {{ form_label(form.gender) }} #}
+{{ form_errors(form.gender) }}
+{{ form_widget(form.gender, {'attr':{'class':'span6 form-inline'}}) }}
+
+</div>
+
+
+<div class="controls controls-row">
+<div class="span6">
+{{ form_label(form.street) }}
+{{ form_errors(form.street) }}
+{{ form_widget(form.street) }}
+</div>
+<div class="span3">
+
+{{ form_label(form.houseNumber) }}
+{{ form_errors(form.houseNumber) }}
+{{ form_widget(form.houseNumber) }}
+</div>
+<div class="span3">
+{{ form_label(form.box) }}
+{{ form_errors(form.box) }}
+{{ form_widget(form.box) }}
+</div>
+</div>
+
+
+{{ form_label(form.place) }}
+{{ form_errors(form.place) }}
+{{ form_widget(form.place) }}
+
+<div class="controls controls-row">
+<div class="span6">
+{{ form_label(form.phone) }}
+{{ form_errors(form.phone) }}
+{{ form_widget(form.phone) }}
+</div>
+
+<div class="span6">
+{{ form_label(form.mobile) }}
+{{ form_errors(form.mobile) }}
+{{ form_widget(form.mobile) }}
+</div></div>   
+ 
+{{ form_label(form.website) }}
+{{ form_errors(form.website) }}
+{{ form_widget(form.website) }} 
+ 
+{{ form_label(form.isActive) }}
+{{ form_errors(form.isActive) }}
+{{ form_widget(form.isActive) }}    
+    
+<p><button type="submit" class="btn btn-success">{{ 'create'|trans }}</button></p>   
+    
+    
+{{ form_rest(form) }}
+
+</form>
 
         <ul class="record_actions">
     <li>
-        <a href="{{ path('lets_transact_users') }}">
-            Back to the list
+        <a href="{{ path('eeemarv_eeemarv_user_index') }}">
+            {{ 'back_to_list'|trans }}
         </a>
     </li>
 </ul>

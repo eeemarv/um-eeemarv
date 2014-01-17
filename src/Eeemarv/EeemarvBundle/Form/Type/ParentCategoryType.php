@@ -38,7 +38,7 @@ class ParentCategoryType extends AbstractType
 	public function setDefaultOptions(OptionsResolverInterface $resolver)
 	{
         $resolver->setDefaults(array(
-            'class' => 'Lets\TransactBundle\Entity\Category',
+            'class' => 'Eeemarv\EeemarvBundle\Entity\Category',
 			'empty_value' => '', 
 			'empty_data' => null,
 			'required' => false,

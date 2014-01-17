@@ -31,7 +31,7 @@ class UserManager extends FOSUserManager
 			}	
 		}
 		$uniqueIdGenerator = new UniqueIdGenerator();
-		return $firstName.' --'.substr(strtolower($uniqueIdGenerator->generateUniqueId()), 0, 4);
+		return $firstName.' --'.substr(strtolower($uniqueIdGenerator->generate()), 0, 4);
     }
     
      /**

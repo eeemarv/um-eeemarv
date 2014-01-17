@@ -2,19 +2,23 @@
 
 namespace Eeemarv\EeemarvBundle\Entity;
 
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Gedmo\Translatable\Translatable;
+
+
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\Common\Collections\ArrayCollection;
-
 use Gedmo\Mapping\Annotation as Gedmo;
 
 
 /**
+ * @Gedmo\Tree(type="nested") 
  * @ORM\Table(name="categories")
  * @ORM\Entity(repositoryClass="Eeemarv\EeemarvBundle\Repository\CategoryRepository")
  * @Gedmo\TranslationEntity(class="Eeemarv\EeemarvBundle\Entity\CategoryTranslation") 
  */
-class Category
+class Category implements Translatable
 {
     /**
      * @ORM\Id
@@ -32,23 +36,33 @@ class Category
     
     
     /**
+     * @Gedmo\TreeLeft
      * @ORM\Column(type="integer", name="lft")
      */
     private $left;
 
     /**
+     * @Gedmo\TreeRight 
      * @ORM\Column(type="integer", name="rght")
      */
     private $right;
 
     /**
+     * @Gedmo\TreeParent 
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="SET NULL")
      */
     private $parent;
 
     /**
-     * @ORM\Column(type="integer")
+     * @Gedmo\TreeRoot
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $root = null;
+
+    /**
+     * @Gedmo\TreeLevel
+     * @ORM\Column(type="integer", name="lvl")
      */
     private $level;
 
@@ -77,7 +91,40 @@ class Category
 	/**
 	 * @ORM\Column(type="integer", name="want_count")
 	 */
-	protected $wantCount = 0;		
+	protected $wantCount = 0;
+
+	/**
+	 * @ORM\Column(type="boolean", name="is_commentable", nullable=true)
+	 */
+	protected $isCommentable;
+	
+/* */
+
+	/**
+	 * @ORM\Column(type="boolean", name="is_wantable", nullable=true)
+	 */
+	protected $isWantable = false;
+	
+	/**
+	 * @ORM\Column(type="boolean", name="is_offerable", nullable=true)
+	 */
+	protected $isOfferable = false;
+	
+	/**
+	 * @ORM\Column(type="boolean", name="is_eventable", nullable=true)
+	 */
+	protected $isEventable = false;
+
+/** mailing list **/ 
+	
+	/**
+	 * ORM\Column(name="email_address", nullable=true)
+	 * 
+	 * domain not included 
+	 *
+	protected $emailAddress;
+	
+				
 	
 /* Created / Updated */
 
@@ -185,7 +232,28 @@ class Category
         return $this->right;
     }
 
+    /**
+     * Set root
+     *
+     * @param integer $root
+     * @return Category
+     */
+    public function setRoot($root)
+    {
+        $this->root = $root;
+    
+        return $this;
+    }
 
+    /**
+     * Get root
+     *
+     * @return integer 
+     */
+    public function getRoot()
+    {
+        return $this->root;
+    }
 
     /**
      * Set level
@@ -527,38 +595,6 @@ class Category
         return $this->updatedBy;
     }
     
- 
-  
-
-    /**
-     * Set defaultTranslation
-     *
-     * @param \Eeemarv\EeemarvBundle\Entity\CategoryTranslation $defaultTranslation
-     * @return Category
-     */
-    public function setDefaultTranslation(\Eeemarv\EeemarvBundle\Entity\CategoryTranslation $defaultTranslation = null)
-    {
-        $this->defaultTranslation = $defaultTranslation;
-    
-        return $this;
-    }
-
-    /**
-     * Get defaultTranslation
-     *
-     * @return \Eeemarv\EeemarvBundle\Entity\CategoryTranslation 
-     */
-    public function getDefaultTranslation()
-    {
-        return $this->defaultTranslation;
-    }
-    
-     public function __toString()
-    {		
-        return str_repeat('......', $this->getLevel()) . $this->getName();
-    }      
-    
-    
 
     /**
      * Set name
@@ -581,5 +617,107 @@ class Category
     public function getName()
     {
         return $this->name;
+    }
+ 
+     public function __toString()
+    {		
+        return $this->getName();
+    }    
+    
+     public function getIdentedName()
+    {		
+        return str_repeat('......', $this->getLevel()) . $this->getName();
+    }       
+
+    /**
+     * Set isCommentable
+     *
+     * @param boolean $isCommentable
+     * @return Category
+     */
+    public function setIsCommentable($isCommentable)
+    {
+        $this->isCommentable = $isCommentable;
+    
+        return $this;
+    }
+
+    /**
+     * Get isCommentable
+     *
+     * @return boolean 
+     */
+    public function getIsCommentable()
+    {
+        return $this->isCommentable;
+    }
+
+    /**
+     * Set isWantable
+     *
+     * @param boolean $isWantable
+     * @return Category
+     */
+    public function setIsWantable($isWantable)
+    {
+        $this->isWantable = $isWantable;
+    
+        return $this;
+    }
+
+    /**
+     * Get isWantable
+     *
+     * @return boolean 
+     */
+    public function getIsWantable()
+    {
+        return $this->isWantable;
+    }
+
+    /**
+     * Set isOfferable
+     *
+     * @param boolean $isOfferable
+     * @return Category
+     */
+    public function setIsOfferable($isOfferable)
+    {
+        $this->isOfferable = $isOfferable;
+    
+        return $this;
+    }
+
+    /**
+     * Get isOfferable
+     *
+     * @return boolean 
+     */
+    public function getIsOfferable()
+    {
+        return $this->isOfferable;
+    }
+
+    /**
+     * Set isEventable
+     *
+     * @param boolean $isEventable
+     * @return Category
+     */
+    public function setIsEventable($isEventable)
+    {
+        $this->isEventable = $isEventable;
+    
+        return $this;
+    }
+
+    /**
+     * Get isEventable
+     *
+     * @return boolean 
+     */
+    public function getIsEventable()
+    {
+        return $this->isEventable;
     }
 }

@@ -31,6 +31,7 @@ twig:
     globals:
         locales: %locales%
         currency_rate: %currency_rate%
+        new_user_days: %new_user_days%
 #    form:
 #        resources:
 #            - EeemarvBundle:Form:fields.html.twig       
@@ -40,7 +41,7 @@ twig:
 assetic:
     debug: %kernel.debug%
     use_controller: false
-    bundles: [ ]
+    bundles: [ EeemarvBundle ]
     filters:
 #        less:
 #            node: /usr/local/bin/node
@@ -51,6 +52,7 @@ assetic:
             apply_to: "\.less$"
             preserve_comments: false   
         cssrewrite: ~
+
        
 
 
@@ -92,9 +94,7 @@ swiftmailer:
 
 ## 
 
-
-
-# eeeMarv
+# eeemarv
 
 eeemarv:
     code:          %code%
@@ -125,8 +125,11 @@ stof_doctrine_extensions:
             sluggable: true
             blameable: true
             translatable: true
- #           loggable: true
- #           uploadable: true
+            tree: true
+            loggable: true
+            uploadable: true
+            softdeleteable: true
+            sortable: true
 
 
 # fos user
@@ -151,12 +154,10 @@ fos_user:
         user_manager: eeemarv.user_manager 
 
 
-
 # vich geografical
 
 vich_geographical:
     db_driver: orm
-
 
 
 # liip imagine    
@@ -187,10 +188,10 @@ ivory_ck_editor:
     configs:
         eeemarv_message:
             toolbar: "toolbar_message"
-            uiColor: "#222"
+#            uiColor: "#222"
         eeemarv_page:
             toolbar: "toolbar_page"
-            uiColor: "#222"              
+#            uiColor: "#222"              
     toolbars:
         configs:
             toolbar_message: ["@document", "@basic", "@paragraph", "@link", "@tools"]
@@ -219,3 +220,42 @@ bc_bootstrap:
     less_filter: lessphp
     jquery_path: %kernel.root_dir%/../web/bundles/bmatznerjquery/js/jquery.js
 
+
+# guzzle
+
+guzzle:
+    plugin:
+        wsse:
+            username: %unique_id%
+            
+# oneup uploader
+
+oneup_uploader:
+    mappings:
+        gallery:
+            frontend: blueimp
+            storage:
+                type: gaufrette
+                filesystem: gaufrette.gallery_filesystem
+
+# knp gaufrette
+
+knp_gaufrette:
+    adapters:
+        gallery:
+            local:
+                directory: %kernel.root_dir%/../web/uploads
+                create: false
+    filesystems:
+        gallery:
+            adapter: gallery
+
+# lsw memcache
+
+lsw_memcache:
+    session:
+        client: default
+    clients:
+        default:
+            hosts:
+              - { dsn: localhost, port: 11211 }

@@ -48,86 +48,131 @@ class PlaceController extends Controller
     /**
      * Secure(roles="ROLE_ADMIN")
      * @Template
-     * @Route("/places/new")
-     * @Method({"GET"})
+     * @Route("/places")
+     * @Method({"POST"})
      */
     public function createAction(Request $request)
     {
-        $entity  = new Place();
-        $form = $this->createForm('eeemarv_place_type', $entity);
+        $place  = new Place();
+        $form = $this->createForm('eeemarv_place_type', $place);
         if ($request->isMethod('POST')){
 			$form->bind($request);
 
 			if ($form->isValid()) {
-				$em = $this->getDoctrine()->getManager();
-				$em->persist($entity);
-				$em->flush();
-
-				return $this->redirect($this->generateUrl('eeemarv_eeemarv_place_show', array('id' => $entity->getId())));
+				$this->em->persist($place);
+				$this->em->flush();
+				$request->getSession()->getFlashBag()->add('success', 'flash.success.create.place');
+				return $this->redirect($this->generateUrl('eeemarv_eeemarv_place_index'));
 			}
 		}
         return $this->render('EeemarvBundle:Place:new.html.twig', array(
-            'entity' => $entity,
+            'entity' => $place,
             'form'   => $form->createView(),
         ));
     }
+    
+    /**
+     * Secure(roles="ROLE_ADMIN")
+     * @Template
+     * @Route("/places/new")
+     * @Method({"GET"})
+     */
+    public function newAction()
+    {
+        $place = new Place();
+        $form   = $this->createForm('eeemarv_place_type', $place);
+        return array(
+            'entity' => $place,
+            'form'   => $form->createView(),
+			);
+    }
+
+    /**
+     * Secure(roles="ROLE_ADMIN")
+     * @Template
+     * @Route("/places/{id}", requirements={"id"="\d+"})
+     * @Method({"GET"})
+     * @ParamConverter
+     */
+    public function showAction(Place $place)
+    {
+        return array(
+            'entity'      => $place,        
+            );
+    }
+
+
+
 
 
 
     /**
      * Secure(roles="ROLE_ADMIN")
      * @Template
-     * @Route("/places/{id}", requirements={"id"="\d+"})
-     * @Method({"GET", "POST"})
+     * @Route("/places/{id}/edit", requirements={"id"="\d+"})
+     * @Method({"GET"})
+     * @ParamConverter
      */
-    public function editAction(Request $request, $id)
+    public function editAction(Request $request, Place $place)
     {
-        $entity = $this->repo->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Place entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($id);
-        $editForm = $this->createForm('eeemarv_place_type', $entity);
-        $editForm->bind($request);
-
-        if ($editForm->isValid()) {
-            $this->em->persist($entity);
-            $this->em->flush();
-			$request->getSession()->getFlashBag()->add('success', 'flash.success.edit.place');
-            return $this->redirect($this->generateUrl('eeemarv_places_edit', array('id' => $id)));
-        }
+        $form = $this->createForm('eeemarv_place_type', $place);
 
         return array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'place'      => $place,
+            'form'        => $form->createView(),
         );
     }
 
     /**
-     * Deletes a Place entity.
-     * @Secure(roles="ROLE_SUPER_ADMIN")
+     * Secure(roles="ROLE_ADMIN")
+     * @Template
+     * @Route("/places/{id}", requirements={"id"="\d+"})
+     * @Method({"PUT"})
+     * @ParamConverter
      */
-    public function deleteAction(Request $request, $id)
+    public function updateAction(Request $request, Place $place)
     {
-        $form = $this->createDeleteForm($id);
+        $form = $this->createForm('eeemarv_place_type', $place);
         $form->bind($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('EeemarvBundle:Place')->find($id);
+            $this->em->persist($place);
+            $this->em->flush();
+			$request->getSession()->getFlashBag()->add('success', 'flash.success.edit.place');
+            return $this->redirect($this->generateUrl('eeemarv_eeemarv_place_index'));
+        }
+        
+        return $this->render('EeemarvBundle:Place:edit.html.twig', array(
+            'place'      => $place,
+            'edit_form'   => $form->createView(),
+        ));
+    }
 
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find Place entity.');
-            }
 
-            $em->remove($entity);
+
+
+
+
+    /**
+     * Deletes a Place entity.
+     * Secure(roles="ROLE_ADMIN")
+     * @Template
+     * @Route("/places/{id}", requirements={"id"="\d+"})
+     * @Method({"DELETE"})
+     * @ParamConverter
+     */
+    public function deleteAction(Request $request, Place $place)
+    {
+        $form = $this->createDeleteForm($place->getId());
+        $form->bind($request);
+
+        if ($form->isValid()) {
+
+            $em->remove($place);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('eeemarv_places'));
+        return $this->redirect($this->generateUrl('eeemarv_eeemarv_place_index'));
     }
 
     private function createDeleteForm($id)

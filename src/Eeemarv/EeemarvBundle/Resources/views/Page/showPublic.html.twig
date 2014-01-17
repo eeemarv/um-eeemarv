@@ -1,0 +1,10 @@
+{% extends 'EeemarvBundle::base.html.twig' %}
+{# {% form_theme form 'EeemarvBundle:Form:fields.html.twig' %} #}
+
+{% block title_extra %} {{ page.subject }}{% endblock %}
+
+{% block inner_content -%}
+
+<div>{{ page.content|raw }}</div>
+
+{%- endblock %}

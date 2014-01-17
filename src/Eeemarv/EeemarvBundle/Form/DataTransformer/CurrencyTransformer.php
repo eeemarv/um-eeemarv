@@ -45,7 +45,9 @@ class CurrencyTransformer implements DataTransformerInterface
     public function reverseTransform($amount)
     {
         if (!$amount) {
-            return null;
+			throw new TransformationFailedException(
+				'The amount can not be zero.'
+			);	
         }
 
         return $amount * $this->currencyRate;

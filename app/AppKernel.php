@@ -32,11 +32,12 @@ class AppKernel extends Kernel
 						          
 			new Ivory\CKEditorBundle\IvoryCKEditorBundle(),           
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
-			new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),            
+			new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
+			new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),            
             new EWZ\Bundle\RecaptchaBundle\EWZRecaptchaBundle(),
             
             new FOS\UserBundle\FOSUserBundle(), 
- 			new FOS\RestBundle\FOSRestBundle(),                                    
+ 			new FOS\RestBundle\FOSRestBundle(),                                 
 			new Vich\GeographicalBundle\VichGeographicalBundle(),  
 			new Liip\ImagineBundle\LiipImagineBundle(),
 			
@@ -51,9 +52,14 @@ class AppKernel extends Kernel
 			new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(), 
  
  			new Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle(),
+ 			new EightPoints\Bundle\GuzzleBundle\GuzzleBundle(),
             new Escape\WSSEAuthenticationBundle\EscapeWSSEAuthenticationBundle(),
             
+			new Oneup\UploaderBundle\OneupUploaderBundle(),    
+
+            new Lsw\MemcacheBundle\LswMemcacheBundle(),
             
+   			       
 			// 
   
             new Eeemarv\EeemarvBundle\EeemarvBundle(),           

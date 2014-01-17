@@ -8,8 +8,6 @@ use Symfony\Component\Form\AbstractType;
 use Doctrine\Common\Persistence\ObjectManager;
 use Eeemarv\EeemarvBundle\Form\DataTransformer\CodeTransformer;
 
-// code for users (letsgroups included)
-
 
 class CodeType extends AbstractType
 {

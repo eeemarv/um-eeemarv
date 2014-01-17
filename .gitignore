@@ -1,10 +1,12 @@
 /web/bundles/
-/web/uploads/
 /web/media/
 /web/css/
 /web/js/
 /web/images/
 /web/images-cache/
+/web/uploads/*
+!/web/uploads/.gitkeep
+/web/files/*
 /app/bootstrap*
 /app/bootstrap.php.cache
 /app/cache/*

@@ -8,13 +8,13 @@ use Gedmo\Translatable\Entity\MappedSuperclass\AbstractPersonalTranslation;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="message_translations",
+ * @ORM\Table(name="page_translations",
  *     uniqueConstraints={@ORM\UniqueConstraint(name="lookup_unique_idx", columns={
  *         "locale", "object_id", "field"
  *     })}
  * )
  */
-class MessageTranslation extends AbstractPersonalTranslation
+class PageTranslation extends AbstractPersonalTranslation
 {
     /**
      * Convinient constructor
@@ -31,7 +31,7 @@ class MessageTranslation extends AbstractPersonalTranslation
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="Message", inversedBy="translations")
+     * @ORM\ManyToOne(targetEntity="Page", inversedBy="translations")
      * @ORM\JoinColumn(name="object_id", referencedColumnName="id", onDelete="CASCADE")
      */
     protected $object;

@@ -1,0 +1,53 @@
+{% extends 'EeemarvBundle::base.html.twig' %}
+
+{% block page_header_inner %}{{ 'edit'|trans }}: {{ message.subject }}{% endblock %}
+
+{% block inner_content -%}
+
+    <form action="{{ path('eeemarv_eeemarv_message_update', { 'id': message.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+        <input type="hidden" name="_method" value="PUT" />
+        
+        <div class="row-fluid">
+
+			{{ form_widget(edit_form.subject, {'attr': {'class': 'span10', 'placeholder': 'subject' }}) }}
+        </div>
+        <div class="row-fluid">
+		{#	{{ form_widget(edit_form.serviceOrObject) }} #}
+			{{ form_widget(edit_form.category, {'attr': {'class': 'span6' }})  }}
+        </div>
+        <div class="row-fluid">
+			{{ form_widget(edit_form.content, {'attr': {'class': 'span12'}}) }}
+
+        </div>
+               
+        <div class="row-fluid top-10">
+			<div class="input-append span12">
+				{{ form_widget(edit_form.price, {'attr': {'class': 'text-right span2', 'placeholder': '0'}}) }}
+				<span class="add-on">{{ 'currency_plural'|trans({}, 'site') }}</span>
+			</div>
+        </div>          
+        
+   
+        {{ form_widget(edit_form) }}
+        
+      
+        {{ form_rest(edit_form) }}
+        
+        <p>
+            <button type="submit" class="btn btn-primary">{{ 'edit'|trans }}</button>
+        </p>
+    </form>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('eeemarv_eeemarv_message_index') }}">
+            {{ 'back_to_list'|trans }}
+        </a>
+    </li>
+</ul>
+
+
+
+
+
+{% endblock %}

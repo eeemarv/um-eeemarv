@@ -1,0 +1,39 @@
+{% extends 'EeemarvBundle::base.html.twig' %}
+{% form_theme form 'EeemarvBundle:Form:fields.html.twig' %}
+
+
+{% block page_header_inner %}{{ 'page_new'|trans }}{% endblock %}
+
+{% block inner_content -%}
+
+    <form action="{{ path('eeemarv_eeemarv_page_create') }}" method="post" {{ form_enctype(form) }}>
+        {{ form_errors(form) }}
+ 
+
+
+{#<input id="fileupload" type="file" name="files[]" data-url="{{ oneup_uploader_endpoint('gallery') }}" multiple />#}
+ 
+        
+        {{ form_label(form.subject) }}
+		{{ form_errors(form.subject) }}		
+		{{ form_widget(form.subject) }}      
+        
+        {{ form_label(form.content) }}
+		{{ form_errors(form.content) }}		
+		{{ form_widget(form.content) }}	
+        
+        {{ form_widget(form.create, {'attr':{'class': 'btn btn-success top-10'}}) }}
+		{{ form_rest(form) }}
+    </form>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('eeemarv_eeemarv_page_index') }}">
+			{{ 'back_to_list'|trans }}
+        </a>
+    </li>
+</ul>
+
+{% endblock %}
+
+

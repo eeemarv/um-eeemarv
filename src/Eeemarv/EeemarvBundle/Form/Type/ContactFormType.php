@@ -39,7 +39,8 @@ class ContactFormType extends AbstractType
 			->add('recaptcha', 'ewz_recaptcha', array(
 				'attr' => array('options' => array('theme' => 'clean')),
 				'mapped' => false,
-				'constraints'   => array(new True())));
+				'constraints'   => array(new True())))
+			->add('send', 'submit');
     }
 
     public function getName()

@@ -7,12 +7,19 @@ It is based on the [Symfony2](http://symfony.com/) php framework.
 
 
 
+Reporting an issue or a feature request.
+---------------------------------------
+
+Issues and feature requests are tracked in the [Github issue tracker](https://github.com/marttii/eeemarv/issues).
+
+
 Requirements
 -------------
 
   * Git 1.6+
   * PHP 5.3.3+
   * php5-intl
+  * [memcached](http://php.net/manual/en/memcached.installation.php) php extension 
   * [mailparse](http://pecl.php.net/package/mailparse) php extension ([wiki on installation](http://wiki.cerbweb.com/Installing_PHP_Mailparse))
   * phpunit 3.6+ (optional)
   * [composer](http://getcomposer.org/) (see Installation)
@@ -26,12 +33,16 @@ Installation
 
 go to the directory where you want to install eeemarv and get the files with git (from the command line):
 
-    git clone https://github.com/marttii/eeeMarv.git
+    git clone https://github.com/marttii/eeemarv.git
+
+### Database 
+
+Create an empty MySQL database. The parameters are needed in the next step. 
 
 ### Composer 
 
 Composer is used to handle the dependencies. 
-To get composer, run the following command in the eeeMarv directory:
+To get composer, run the following command in the eeemarv directory:
 
     curl -s http://getcomposer.org/installer | php
 
@@ -88,7 +99,32 @@ Access the `config.php` script from a browser:
 
 If you get any warnings or recommendations, fix them before moving on.
 
+### Database Fixtures
+
+
+### Assetic 
+
+
 
 License
 ---------------
 eeemarv is distributed under the MIT license. See the LICENSE file for the complete text.
+
+
+Versioning
+--------------
+
+For transparency and insight into the release cycle, releases (from version 1.0.0) will be numbered with the follow format:
+
+<major>.<minor>.<patch>
+
+And constructed with the following guidelines:
+
+    Breaking backwards compatibility bumps the major
+    New additions without breaking backwards compatibility bumps the minor
+    Bug fixes and misc changes bump the patch
+
+For more information on semantic versioning, please visit [http://semver.org/].
+
+
+

@@ -24,6 +24,13 @@
 {% endspaceless %}
 {% endblock textarea_widget %}
 
+{% block button_attributes %}
+{% spaceless %}
+	{% set attr = {'class':'btn'}|merge(attr) %}
+	{{ parent() }}	
+{% endspaceless %}
+{% endblock %}
+
 {% block date_widget %}
 {% spaceless %}
 	<div {{ block('widget_container_attributes') }}>

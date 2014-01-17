@@ -5,8 +5,10 @@ namespace Eeemarv\EeemarvBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use Eeemarv\EeemarvBundle\Entity\Category;
 use Eeemarv\EeemarvBundle\Entity\Message;
 use Eeemarv\EeemarvBundle\Entity\MessageTranslation;
+use Eeemarv\EeemarvBundle\Entity\User;
 
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
@@ -37,59 +39,84 @@ class MessageController extends Controller
 		$this->repo = $em->getRepository('EeemarvBundle:Message');
     }
  
-
-    /**
-     * @Secure(roles="ROLE_ANONYMOUS")
-     * @Template
-     * @Route("/{id}", requirements={"id" = "\d+"})
-     * @Method({"GET"})
-     * @ParamConverter 
-     */
-    public function publicPageAction(Request $request, Message $message)
-    {
-/*		$query = $this->em->createQuery('select m, mt from EeemarvBundle:MessageTranslation mt
-					join mt.message m
-					where mt.id = :id and mt.locale = :locale') // and  m.published = 1
-				->setParameter('id', $id)
-				->setParameter('locale', $request->getLocale());
-		try {
-			return $query->getSingleResult();
-		} catch (\Doctrine\ORM\NoResultException $e) {
-			return null;
-		}		
-*/
-
-
-        $entity = $this->repo->findOneBy(array('id' => $id, 'locale' => $request->getLocale()));
- 
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Message entity.');
-        }       
-        
-
-        return array(
-            'entity' => $message,
-        );
-    }
-
-
-
     /**
      * @Secure(roles="ROLE_USER")
      * @Template
      * @Route("/messages")
      * @Method({"GET"})
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $entities = $this->repo->findBy(array(), array('createdAt' => 'desc'));
-
+		$query = $this->em->createQueryBuilder()
+			->select('m, u')
+			->from('EeemarvBundle:Message', 'm')
+			->join('m.user', 'u')
+			->getQuery();
+		$paginator = $this->get('knp_paginator');
+		$page = $request->query->get('page', 1);		
+		$pagination = $paginator->paginate($query, $page, 25, array(
+			'defaultSortFieldName' => 'm.createdAt',
+			'defaultSortDirection' => 'desc',
+			));			
         return array(
-            'entities' => $entities,
+            'pagination' => $pagination,
         );
     }
-
     
+    /**
+     * @Secure(roles="ROLE_USER")
+     * @Template
+     * @Route("/messages/user/{code}")
+     * @Method({"GET"})
+     * @ParamConverter
+     */
+    public function userAction(Request $request, User $user)
+    {
+		$query = $this->em->createQueryBuilder()
+			->select('m')
+			->from('EeemarvBundle:Message', 'm')
+			->where('m.user = :user')
+			->setParameter('user', $user)
+			->getQuery();
+		$paginator = $this->get('knp_paginator');
+		$page = $request->query->get('page', 1);		
+		$pagination = $paginator->paginate($query, $page, 25, array(
+			'defaultSortFieldName' => 'm.createdAt',
+			'defaultSortDirection' => 'desc',
+			));	
+        return $this->render('EeemarvBundle:Message:index.html.twig', array(
+			'user'		=> $user,
+            'pagination' => $pagination,
+        ));
+    }    
+    
+    /**
+     * @Secure(roles="ROLE_USER")
+     * @Template
+     * @Route("/messages/category/{id}")
+     * @Method({"GET"})
+     * @ParamConverter
+     */
+    public function categoryAction(Request $request, Category $category)
+    {
+		$query = $this->em->createQueryBuilder()
+			->select('m')
+			->from('EeemarvBundle:Message', 'm')
+			->where('m.category = :category')
+			->setParameter('category', $category)
+			->getQuery();
+		$paginator = $this->get('knp_paginator');
+		$page = $request->query->get('page', 1);		
+		$pagination = $paginator->paginate($query, $page, 25, array(
+			'defaultSortFieldName' => 'm.createdAt',
+			'defaultSortDirection' => 'desc',
+			));	
+        return $this->render('EeemarvBundle:Message:index.html.twig', array(
+			'category' => $category,
+            'pagination' => $pagination,
+        ));
+    }      
+   
     /**
      * @Secure(roles="ROLE_USER")
      * @Template
@@ -98,24 +125,21 @@ class MessageController extends Controller
      */
     public function createAction(Request $request)
     {
-        $entity  = new Message();
-        $form = $this->createForm('eeemarv_message_type', $entity);
+        $message  = new Message();
+        $form = $this->createForm('eeemarv_message_type', $message);
         $form->bind($request);
 
         if ($form->isValid()) {
-            $entity->setUser($this->getUser());
-            					
-
-            $this->em->persist($entity);
+            $message->setUser($this->getUser());
+            $this->em->persist($message);
             $this->em->flush();          
-
-            return $this->redirect($this->generateUrl('eeemarv_eeemarv_messages_show', array('id' => $entity->getId())));
+			$request->getSession()->getFlashBag()->add('success', 'flash.success.new.message');
+            return $this->redirect($this->generateUrl('eeemarv_eeemarv_message_show', array('id' => $message->getId(), 'slug' => $message->getSlug())));
         }
 
-        return array(
-            'entity' => $entity,
+        return $this->render('EeemarvBundle:Message:new.html.twig',array(
             'form'   => $form->createView(),
-        );
+        ));
     }
 
     /**
@@ -127,31 +151,10 @@ class MessageController extends Controller
      */
     public function newAction()
     {
-
-        $entity = new Message();
-        $form   = $this->createForm('eeemarv_message_type', $entity);
-
+        $message = new Message();
         return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+            'form'   => $this->createForm('eeemarv_message_type', $message)->createView(),
 		);
-    }
-
-    /**
-     * @Secure(roles="ROLE_USER")
-     * @Template
-     * @Route("/messages/{id}", requirements={"id" = "\d+"})
-     * @Method({"GET"})
-     * @ParamConverter 
-     */
-    public function showAction(Request $request, Message $message)
-    {
-        $deleteForm = $this->createDeleteForm($message);
-
-        return array(
-            'entity'      => $message,
-            'delete_form' => $deleteForm->createView()
-        );
     }
 
     /**
@@ -163,43 +166,75 @@ class MessageController extends Controller
      */
     public function editAction(Request $request, Message $message)
     {
-        $editForm = $this->createForm('eeemarv_message_type', $message);
-        $deleteForm = $this->createDeleteForm($message->getId());
+        $form = $this->createForm('eeemarv_message_type', $message);
 
         return array(
-            'entity'      => $message,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'message'      => $message,
+            'form'   => $form->createView(),
+        );
+    }
+
+
+
+
+    /**
+     * @Secure(roles="ROLE_USER")
+     * @Template
+     * @Route("/messages/{id}/{slug}", requirements={"id" = "\d+"}) 
+     *
+     * @Method({"GET"})
+     * @ParamConverter 
+     */
+    public function showAction(Request $request, Message $message, $id, $slug)
+    {
+		if ($slug != $message->getSlug()){
+			return $this->redirect($this->generateUrl('eeemarv_eeemarv_message_show', array('id' => $message->getId(), 'slug' => $message->getSlug())));
+		}	
+				
+        return array(
+            'message'      => $message,
+            'delete_form' => $this->createDeleteForm($message)->createView(),
+            'comment_form' => $this->createForm('eeemarv_comment_type')->createView(),
         );
     }
     
-    
+     /**
+     * @Secure(roles="ROLE_USER")
+     * @Route("/messages/{id}", requirements={"id" = "\d+"}) 
+     * @Method({"GET"})
+     * @ParamConverter 
+     */
+    public function showIdAction(Request $request, Message $message, $id)
+    {
+		return $this->redirect($this->generateUrl('eeemarv_eeemarv_message_show', array('id' => $message->getId(), 'slug' => $message->getSlug())));
+    }
+
+   
     /**
      * @Secure(roles="ROLE_USER")
      * @Template
      * @Route("/messages/{id}", requirements={"id" = "\d+"})
-     * @Method({"POST"})   
-     * (change to update method)
+     * @Method({"PUT"})
      * @ParamConverter 
      */
     public function updateAction(Request $request, Message $message)
-    {
-        $deleteForm = $this->createDeleteForm($message);
+    {       
         $editForm = $this->createForm('eeemarv_message_type', $message);
         $editForm->bind($request);
 
         if ($editForm->isValid()) {
             $this->em->persist($message);
             $this->em->flush();
-
-            return $this->redirect($this->generateUrl('eeemarv_messages_edit', array('id' => $message->getId())));
+ 			$request->getSession()->getFlashBag()->add('success', 'flash.success.update.message');
+            return $this->redirect($this->generateUrl('eeemarv_eeemarv_message_show', array('id' => $message->getId())));
         }
 
-        return array(
-            'entity'      => $message,
+        return  $this->render('EeemarvBundle:Message:show.html.twig', array(
+            'message'      => $message,
             'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        );
+            'delete_form' => $this->createDeleteForm($message)->createView(),
+            'comment_form' => $this->createForm('eeemarv_comment_type')->createView(),
+        ));
     }
     
     /**
@@ -216,11 +251,12 @@ class MessageController extends Controller
 
         if ($form->isValid()) {
 			
-            $this->em->remove($entity);
+            $this->em->remove($message);
             $this->em->flush();
+ 			$request->getSession()->getFlashBag()->add('success', 'flash.success.delete.message');           
         }
 
-        return $this->redirect($this->generateUrl('eeemarv_eeemarv_messages_index'));
+        return $this->redirect($this->generateUrl('eeemarv_eeemarv_message_index'));
     }
 
     /**
@@ -234,5 +270,5 @@ class MessageController extends Controller
             ->add('id', 'hidden')
             ->getForm()
         ;
-    }   
+    }       
 }

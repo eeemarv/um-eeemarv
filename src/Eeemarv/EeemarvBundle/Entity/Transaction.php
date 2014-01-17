@@ -30,7 +30,7 @@ class Transaction
 
 	/**
 	 * @ORM\Column(type="integer")
-	 * @Assert\Range(min=1, groups={"new"})
+	 * @Assert\Range(min=1)
 	 */
 	protected $amount = null;
 
@@ -77,8 +77,16 @@ class Transaction
 	/**
 	 * @ORM\Column(type="decimal", precision=7, scale=2, nullable=true)
 	 */
-	protected $distance = null;	
-
+	protected $distance = null;
+	
+	
+	/**
+	 * @ORM\ManyToOne(targetEntity="Message", inversedBy="transactions")
+	 * @ORM\JoinColumn(name="message_id", nullable=true)
+	 */
+	protected $message = null; 	
+	
+	
 /* mass-transaction */ 
 
  	/**
@@ -99,16 +107,34 @@ class Transaction
 	 */
 	protected $external = false;
 
+ 	/**
+	 * @ORM\OneToOne(targetEntity="Transaction", inversedBy="annulatedBy")
+	 * @ORM\JoinColumn(name="annulation_of", nullable=true)
+	 */
+	protected $annulationOf = null;
+
+ 	/**
+	 * @ORM\OneToOne(targetEntity="Transaction", mappedBy="annulationOf")
+	 * @ORM\JoinColumn(name="annulated_by", nullable=true)
+	 */
+	protected $annulatedBy = null;
+
+	/**
+	 * @ORM\Column(type="boolean")
+	 */
+	protected $confirmed = false;
+
+	/**
+	 * @Gedmo\Timestampable(on="change", field="confirmed", value=true)
+	 * @ORM\Column(type="datetime", name="confirmed_at", nullable=true)
+	 */
+	protected $confirmedAt = null;
+
 	/**
 	 * @Gedmo\Timestampable(on="create")
 	 * @ORM\Column(type="datetime", name="transaction_at")
 	 */
 	protected $transactionAt = null;
-
-	/**
-	 * @ORM\Column(type="datetime", name="confirmed_at")
-	 */
-	protected $confirmedAt = null;
 
 /* */	
 
@@ -119,6 +145,7 @@ class Transaction
 	protected $createdAt = null;
 	
 	/**
+	 * @Gedmo\Blameable(on="create")
 	 * @ORM\ManyToOne(targetEntity="User")
 	 * @ORM\JoinColumn(name="created_by")
 	 */
@@ -460,6 +487,29 @@ class Transaction
 
 
     /**
+     * Set message
+     *
+     * @param \Eeemarv\EeemarvBundle\Entity\Message $message
+     * @return Transaction
+     */
+    public function setMessage(\Eeemarv\EeemarvBundle\Entity\Message $message = null)
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
+    /**
+     * Get message
+     *
+     * @return \Eeemarv\EeemarvBundle\Entity\Message 
+     */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    /**
      * Set transactionAt
      *
      * @param \DateTime $transactionAt
@@ -558,4 +608,96 @@ class Transaction
     {		
 		return $this->getDescription();
     } 
+
+    /**
+     * Set confirmed
+     *
+     * @param boolean $confirmed
+     * @return Transaction
+     */
+    public function setConfirmed($confirmed)
+    {
+        $this->confirmed = $confirmed;
+    
+        return $this;
+    }
+
+    /**
+     * Get confirmed
+     *
+     * @return boolean 
+     */
+    public function getConfirmed()
+    {
+        return $this->confirmed;
+    }
+
+    /**
+     * Set parent
+     *
+     * @param \Eeemarv\EeemarvBundle\Entity\Transaction $parent
+     * @return Transaction
+     */
+    public function setParent(\Eeemarv\EeemarvBundle\Entity\Transaction $parent = null)
+    {
+        $this->parent = $parent;
+    
+        return $this;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return \Eeemarv\EeemarvBundle\Entity\Transaction 
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Set annulationOf
+     *
+     * @param \Eeemarv\EeemarvBundle\Entity\Transaction $annulationOf
+     * @return Transaction
+     */
+    public function setAnnulationOf(\Eeemarv\EeemarvBundle\Entity\Transaction $annulationOf = null)
+    {
+        $this->annulationOf = $annulationOf;
+    
+        return $this;
+    }
+
+    /**
+     * Get annulationOf
+     *
+     * @return \Eeemarv\EeemarvBundle\Entity\Transaction 
+     */
+    public function getAnnulationOf()
+    {
+        return $this->annulationOf;
+    }
+
+    /**
+     * Set annulatedBy
+     *
+     * @param \Eeemarv\EeemarvBundle\Entity\Transaction $annulatedBy
+     * @return Transaction
+     */
+    public function setAnnulatedBy(\Eeemarv\EeemarvBundle\Entity\Transaction $annulatedBy = null)
+    {
+        $this->annulatedBy = $annulatedBy;
+    
+        return $this;
+    }
+
+    /**
+     * Get annulatedBy
+     *
+     * @return \Eeemarv\EeemarvBundle\Entity\Transaction 
+     */
+    public function getAnnulatedBy()
+    {
+        return $this->annulatedBy;
+    }
 }

@@ -18,16 +18,22 @@ class TransactionEventListener implements EventSubscriberInterface
     private $factory;
 
     /**
-     * @var EntityManagers
+     * @var EntityManager
      */
     private $em;
+    
+    /**
+     * @var SecurityContext
+     */
+    private $securityContext;    
+    
 
     /**
      * @param factory FormFactoryInterface
      * @param em EntityManager
      * @param securityContext SecurityContext
      */
-    public function __construct(FormFactoryInterface $factory, EntityManager $em)
+    public function __construct(FormFactoryInterface $factory, EntityManager $em, SecurityContext $securityContext)
     {
         $this->factory = $factory;
         $this->em = $em;
@@ -54,20 +60,20 @@ class TransactionEventListener implements EventSubscriberInterface
 
 		if (sizeof($toCodeArray) == 0) {
 			$msg = 'The code is empty.';
-            throw new \Exception(sprintf($toCode));
+            throw new \Exception(sprintf($msg, $toCode));
         }		
 
         $toUser = $this->em
-            ->getRepository('LetsTransactBundle:User')
+            ->getRepository('EeemarvBundle:User')
             ->findByCode($toCodeArray[0]);
 
-        if ($toUser === null) {
+        if (!$toUser) {
             $msg = 'The user with code %s could not be found.';
             throw new \Exception(sprintf($msg, $toCode));
         }
         
         
-        if (!$toUser->getActive()) {
+        if (!$toUser->getActivated()) {
             $msg = 'The user with code %s is not Active.';
             throw new \Exception(sprintf($msg, $toCode));
         }

@@ -35,11 +35,19 @@ services:
         tags:
             - { name: form.type, alias: eeemarv_message_type }
 
-    eeemarv.form.type.parent_category:
-        class: Eeemarv\EeemarvBundle\Form\Type\ParentCategoryType
-        arguments: [ @doctrine.orm.entity_manager ]
+    eeemarv.page.form.type:
+        class: Eeemarv\EeemarvBundle\Form\Type\PageType
         tags:
-            - { name: form.type, alias: eeemarv_parent_category_type }
+            - { name: form.type, alias: eeemarv_page_type }
+
+
+
+
+    eeemarv.comment.form.type:
+        class: Eeemarv\EeemarvBundle\Form\Type\CommentType
+        tags:
+            - { name: form.type, alias: eeemarv_comment_type }
+
 
     eeemarv.transaction.form:
         class: Eeemarv\EeemarvBundle\Form\Type\TransactionType
@@ -94,9 +102,32 @@ services:
             - { name: form.type, alias: eeemarv_ckeditor_type }
  
     eeemarv.category.form.type:
-        class: Eeemarv\EeemarvBundle\Form\Type\CategoryFormType
+        class: Eeemarv\EeemarvBundle\Form\Type\CategoryType
         tags:
             - { name: form.type, alias: eeemarv_category_type } 
+            
+    eeemarv.user.form.type:
+        class: Eeemarv\EeemarvBundle\Form\Type\UserType
+        arguments: [ @eeemarv.unique_id_generator ]
+        tags:
+            - { name: form.type, alias: eeemarv_user_type }            
+
+    eeemarv.hidden_datetime.form.type:
+        class: Eeemarv\EeemarvBundle\Form\Type\HiddenDateTimeType
+        tags:
+            - { name: form.type, alias: hidden_datetime } 
+            
+ 
+# hidden entity type 
+ 
+    lrotherfield.form.type.hidden_entity:
+        class: Lrotherfield\Component\Form\Type\HiddenEntityType
+        arguments:
+            - @doctrine.orm.entity_manager
+        tags:
+            - { name: form.type, alias: hidden_entity } 
+ 
+            
  
 # menus
 
@@ -186,8 +217,8 @@ services:
 
 
     eeemarv.transaction.form_listener:
-        class: Eeemarv\EeemarvBundle\Form\EventListener\EeemarvTransactionEventListener
-        arguments: [ @form.factory, @doctrine.orm.entity_manager ] 
+        class: Eeemarv\EeemarvBundle\Form\EventListener\TransactionEventListener
+        arguments: [ @form.factory, @doctrine.orm.entity_manager, @security.context ] 
 
 
 

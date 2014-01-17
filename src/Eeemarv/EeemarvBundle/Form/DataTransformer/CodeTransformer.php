@@ -5,6 +5,7 @@ namespace Eeemarv\EeemarvBundle\Form\DataTransformer;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Doctrine\ORM\EntityManager;
+
 use Eeemarv\EeemarvBundle\Entity\User;
 
 class CodeTransformer implements DataTransformerInterface
@@ -14,45 +15,57 @@ class CodeTransformer implements DataTransformerInterface
      */
     protected $em;	
 	
-	
+	protected $repo;
 	
     public function __construct(EntityManager $em)
     {
 		$this->em = $em;
+		$this->repo = $em->getRepository('EeemarvBundle:User');		
     }
 
     /**
-     * Transforms User to Code+space+username.
+     * Transforms Code to Code+space+username.
      *
      * @param  User $user
      * @return string
      */
-    public function transform($user)
+    public function transform($code)
     {
-        if (empty($user) || empty($user->getCode() || !($user->getActive())) {
+		$user = $this->repo->findOneBy(array('code' => $code));
+		
+        if (!$user || !$user->getCode() || !$user->getIsActive()) {
             return null;
         }
         
-		return $user->getCode().' '.$user->getUsername();
+		return $code.' '.$user->getUsername();
     }
 
     /**
-     * Transforms Code+space+username to user.
+     * Transforms Code+space+username to code.
      *
      * @param  string $codeString
-     * @return User|null
+     * @return string
      */
     public function reverseTransform($codeString)
     {
-		$repository = $this->em->getRepository('EeemarvBundle:User');
-		
 		$codeString = trim($codeString);
 		list($code) = explode(' ', $codeString);
-		list($code) = explode('/', $code);
 		$code = strtolower($code);
 		
-		$user = $repository->findOneBy(array('code' => $code));
+		if(!ctype_alnum(str_replace('/', '', $code))) {
+			throw new TransformationFailedException(sprintf(
+			'Your code %s contains non-alfanumeric characters.', $code)
+			);
+		} 		
 
-        return $user;
+		list($localCode) = explode('/', $code);
+		
+		if (!$this->repo->findOneBy(array('code' => $localCode))){   // + active code (seperate transformer?) // + external codes 
+			throw new TransformationFailedException(sprintf(
+			'The local user with code %s does not exist.', $localCode)
+			);			
+		}	
+
+        return $code;
     }
 }

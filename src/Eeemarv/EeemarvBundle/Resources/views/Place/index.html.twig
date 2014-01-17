@@ -1,18 +1,20 @@
 {% extends 'EeemarvBundle::base.html.twig' %}
 
+{% block page_header_inner %}{{ 'places'|trans }}{% endblock %}
+{% block buttons %}
+        <a href="{{ path('eeemarv_eeemarv_place_new') }}" class="btn btn-success">{{ 'new'|trans }}</a>
+{% endblock %}        
+        
 {% block inner_content %}
 
-<legend>{{ 'places'|trans }}</legend>
+
 
 <table class="table table-striped table-bordered table-condensed table-hover">
     <tbody>
         <thead>
             <tr>
-			
                     <th class="span2">{{ 'postal_code'|trans }}</th> 				
-					<th class="span4">{{ 'place_name'|trans }}</th>
-					<th class="span2">{{ 'translations'|trans }}</th>
-					<th class="span2">{{ 'primary'|trans }}</th>
+					<th class="span8">{{ 'place_name'|trans }}</th>
 					<th class="span2">{{ 'country'|trans }}</th>
 					
 
@@ -26,7 +28,7 @@
         <tr>
         <td class="span2"><a href="{{ path('eeemarv_eeemarv_place_edit', { 'id': entity.id }) }}">{{ entity.postalCode }}</a></td>
             
-        <td>{{ entity.defaultTranslation.getName() }}</td>
+        <td>{{ entity.name }}</td>
         <td>{{ entity.country }}</td>
                
 		</td>
@@ -35,12 +37,7 @@
     </tbody>
 </table>
 
-<ul>
-    <li>
-     {#   <a href="{{ path('eeemarv_eeemarv_place_new') }}">#}
-            Create a new entry
-     {#    </a> #}
-    </li>
-</ul>
+
+
 
 {% endblock inner_content %}

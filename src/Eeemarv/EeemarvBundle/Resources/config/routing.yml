@@ -4,6 +4,10 @@ _imagine:
     resource: .
     type: imagine
  
+oneup_uploader:
+    resource: .
+    type: uploader
+ 
 
 eeemarv_message:
     resource: @EeemarvBundle/Controller/MessageController.php
@@ -22,7 +26,7 @@ eeemarv_category:
     resource: @EeemarvBundle/Controller/CategoryController.php
     type: annotation
     
-eeemarv_places:
+eeemarv_place:
     resource: @EeemarvBundle/Controller/PlaceController.php
     type: annotation
 
@@ -34,7 +38,21 @@ eeemarv_fos_user:
 eeemarv_default:
     resource: @EeemarvBundle/Controller/DefaultController.php
     type: annotation
+
+eeemarv_comment:
+    resource: @EeemarvBundle/Controller/CommentController.php
+    type: annotation 
+
+eeemarv_trash:
+    resource: @EeemarvBundle/Controller/TrashController.php
+    type: annotation
+
     
+eeemarv_page:
+    resource: @EeemarvBundle/Controller/PageController.php
+    type: annotation    
+    
+  
 
 eeemarv_missing_locale:
     pattern: /

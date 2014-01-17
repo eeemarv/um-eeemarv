@@ -24,7 +24,7 @@ class UniqueIdGenerator
         }
     }
 
-    public function generateUniqueId()
+    public function generate()
     {
         return rtrim(strtr(base64_encode($this->getRandomNumber()), '/', '-'), '=');
     }

@@ -1,66 +1,66 @@
-{% extends '::base.html.twig' %}
+{% extends 'EeemarvBundle::base.html.twig' %}
 
-{% block body -%}
-    <h1>Transaction</h1>
+{% block page_header_inner %}Transaction{% endblock %}
 
+{% block inner_content -%}
     <table class="record_properties">
         <tbody>
             <tr>
                 <th>Id</th>
-                <td>{{ entity.id }}</td>
+                <td>{{ transaction.id }}</td>
             </tr>
             <tr>
                 <th>Amount</th>
-                <td>{{ entity.amount // currency_rate }}</td>
+                <td>{{ transaction.amount // currency_rate }}</td>
             </tr>
             <tr>
                 <th>Fromcode</th>
-                <td>{{ entity.fromCode }}</td>
+                <td>{{ transaction.fromCode }}</td>
             </tr>
             <tr>
                 <th>Tocode</th>
-                <td>{{ entity.toCode }}</td>
+                <td>{{ transaction.toCode }}</td>
             </tr>
 
             <tr>
                 <th>Fromname</th>
-                <td>{{ entity.fromName }}</td>
+                <td>{{ transaction.fromName }}</td>
             </tr>
             <tr>
                 <th>Toname</th>
-                <td>{{ entity.toName }}</td>
+                <td>{{ transaction.toName }}</td>
             </tr>
             <tr>
                 <th>Description</th>
-                <td>{{ entity.description }}</td>
+                <td>{{ transaction.description }}</td>
             </tr>
-            <tr>
+ {#           <tr>
                 <th>Subamount</th>
-                <td>{{ entity.subAmount }}</td>
-            </tr>
+                <td>{{ transaction.subAmount // currency_rate }}</td>
+            </tr> #}
             <tr>
                 <th>Uniqueid</th>
-                <td>{{ entity.uniqueId }}</td>
+                <td>{{ transaction.uniqueId }}</td>
             </tr>
             <tr>
                 <th>External</th>
-                <td>{{ entity.external }}</td>
+                <td>{{ transaction.external }}</td>
             </tr>
             <tr>
                 <th>Transactionat</th>
-                <td>{{ entity.transactionAt|date('Y-m-d H:i:s') }}</td>
+                <td>{{ transaction.transactionAt|date('Y-m-d H:i:s') }}</td>
             </tr>
             <tr>
                 <th>Createdat</th>
-                <td>{{ entity.createdAt|date('Y-m-d H:i:s') }}</td>
+                <td>{{ transaction.createdAt|date('Y-m-d H:i:s') }}</td>
             </tr>
         </tbody>
     </table>
 
         <ul class="record_actions">
     <li>
-        <a href="{{ path('lets_transact_transactions') }}">
-            Back to the list
+        <a href="{{ path('eeemarv_eeemarv_transaction_index') }}">
+            {{ 'back_to_list'|trans }}
         </a>
     </li>
 </ul>

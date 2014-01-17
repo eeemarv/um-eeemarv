@@ -65,12 +65,13 @@ class RegistrationFormType extends BaseType
 			->add('mobile', 'text', array(
 				'required' => false))
 			->add('uniqueId', 'hidden', array(
-				'data' => $this->uniqueIdGenerator->generateUniqueId(),
+				'data' => $this->uniqueIdGenerator->generate(),
 				))	
 			->add('recaptcha', 'ewz_recaptcha', array(
 				'attr' => array('options' => array('theme' => 'clean')),
 				'mapped' => false,
-				'constraints'   => array(new True())));
+				'constraints'   => array(new True())))
+			->add('send', 'submit');
     }
 
     public function getName()

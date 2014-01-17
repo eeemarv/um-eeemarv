@@ -1,6 +1,6 @@
 <?php
 
-namespace Eeemarv\EeemarvBundle\Form;
+namespace Eeemarv\EeemarvBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -8,7 +8,8 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Eeemarv\EeemarvBundle\Form\EventListener\ParentCategorySubscriber;
+
+// use Eeemarv\EeemarvBundle\Form\EventListener\ParentCategorySubscriber;
 
 
 
@@ -18,8 +19,17 @@ class CategoryType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('parent', 'eeemarv_parent_category_type')
-			->addEventSubscriber(new ParentCategorySubscriber());
+            ->add('parent', 'entity', array(
+				'class' => 'EeemarvBundle:Category',
+				'query_builder' => function(EntityRepository $er) {
+					return $er->createQueryBuilder('c')
+					//	->where('c.level <> 0')
+						->orderBy('c.root, c.left', 'ASC');
+				},
+				'property' => 'identedName',
+            ));
+//            ->add('parent', 'eeemarv_parent_category_type');
+//		->addEventSubscriber(new ParentCategorySubscriber());
 
     }
 

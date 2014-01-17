@@ -4,6 +4,7 @@ namespace Eeemarv\EeemarvBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Eeemarv\EeemarvBundle\Entity\User;
 use Eeemarv\EeemarvBundle\Form\UserType;
@@ -36,6 +37,46 @@ class UserController extends Controller
 		$this->repo = $em->getRepository('EeemarvBundle:User');
     }
 
+     /**
+     * Lists all Active User entities for prefetch typeahead.
+     * @Secure(roles="ROLE_USER")
+     * @Route("/users/typeahead")
+     * @Method({"GET"})
+     */
+
+    public function typeaheadAction()
+    {
+
+        $userRows = $this->repo->findTypeaheadUsers();
+
+		$newUserTime = time() - 86400 * $this->container->getParameter('new_user_days');
+        
+        foreach ($userRows as &$userRow){
+			$userRow['a'] = ($userRow['a'] && date_timestamp_get($userRow['a']) > $newUserTime) ? 1 : 0;
+			$userRow['le'] = ($userRow['le']) ? 1 : 0;
+			$userRow['s'] = ($userRow['s']) ? 1 : 0;
+			$userRow['e'] = ($userRow['e']) ? 1 : 0;						
+		}	
+
+        return new JsonResponse($userRows);
+    }  
+    
+     public function jsonAction()
+    {
+
+   //     $users = $this->repo->findAjaxUsers();
+        
+   //     return new JsonResponse($users);
+        return null;
+    }
+
+
+
+
+
+
+
+
     /**
      * Secure(roles="ROLE_USER")
      * @Template
@@ -43,14 +84,77 @@ class UserController extends Controller
      * @Method({"GET"})
      */
 
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $entities = $this->repo->findAll();
+		$user = $this->getUser();
+    /*    $query = $this->repo->getGeoQuery($user->getLatitude(), $user->getLongitude());
+		$paginator = $this->get('knp_paginator');
+		$page = $request->query->get('page', 1);
+		$pagination = $paginator->paginate($query, $page, 10);        
 
         return array(
-            'entities' => $entities,
-		);
+            'pagination' => $pagination,
+		); */
+		$users = $this->repo->findGeo($user->getLatitude(), $user->getLongitude());
+        return array(
+            'users' => $users,
+		);	
     }
+
+
+    /**
+     * Displays a form to create a new User entity.
+     * Secure(roles="ROLE_ADMIN")
+     * @Template
+     * @Route("/users/new")
+     * @Method({"GET"})
+     */
+    public function newAction()
+    {
+        $user = new User();
+        $form   = $this->createForm('eeemarv_user_type', $user);
+
+        return array(
+            'user' => $user,
+            'form'   => $form->createView(),
+        );
+    }
+
+    /**
+     * Creates a new User entity.
+     * Secure(roles="ROLE_ADMIN")
+     * @Template
+     * @Route("/users")
+     * @Method({"POST"})
+     */
+    public function createAction(Request $request)
+    {
+        $user  = new User();
+        $form = $this->createForm('eeemarv_user_type', $user);    
+        $form->bind($request);
+
+        if ($form->isValid()) {
+			if ($user->getIsActive()){
+				$user->setActivatedBy($this->getUser());				
+				$user->setActivatedAt(new \DateTime());
+			}
+			$user->setLocale($request->getLocale());
+            $this->em->persist($user);
+            $this->em->flush();
+			$request->getSession()->getFlashBag()->add('success', 'flash.success.create.user');
+            return $this->redirect($this->generateUrl('eeemarv_eeemarv_user_show', array('code' => $user->getCode())));
+        }
+
+        return $this->render('EeemarvBundle:User:new.html.twig', array(
+            'user' => $user,
+            'form'   => $form->createView(),
+        ));
+    }
+
+
+
+
+
 
 
     /**
@@ -83,52 +187,16 @@ class UserController extends Controller
      */
     public function showAction(User $user)
     {
+		$deleteForm = $this->createDeleteForm($user);
+		
         return array(
             'user'      => $user,
+            'delete_form' => $deleteForm->createView(),
             );
     }
 
 
 
-
-
-    /**
-     * Creates a new User entity.
-     * @Secure(roles="ROLE_ADMIN")
-     */
-    public function createAction(Request $request)
-    {
-        $entity  = new User();
-        $form = $this->createForm(new UserType(), $entity);    
-        $form->bind($request);
-
-        if ($form->isValid()) {
-            $this->em->persist($entity);
-            $this->em->flush();
-
-            return $this->redirect($this->generateUrl('eeemarv_eeemarv_user_show', array('code' => $entity->getCode())));
-        }
-
-        return $this->render('EeemarvBundle:User:new.html.twig', array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        ));
-    }
-
-    /**
-     * Displays a form to create a new User entity.
-     * @Secure(roles="ROLE_ADMIN")
-     */
-    public function newAction()
-    {
-        $entity = new User();
-        $form   = $this->createForm(new UserType(), $entity);
-
-        return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
-        );
-    }
 
     /**
      * Finds and displays a User entity.
@@ -148,108 +216,79 @@ class UserController extends Controller
 
         return $this->render('EeemarvBundle:User:show.html.twig', array(
             'entity'      => $entity,
-            'delete_form' => $deleteForm->createView(),        
+            'delete_form' => $this->deleteForm->createView(),        
             ));
     }
 
     /**
      * Displays a form to edit an existing User entity.
-     * @Secure(roles="ROLE_ADMIN")
+     * Secure(roles="ROLE_ADMIN")
+     * @Template
+     * @Route("/users/{code}/edit")
+     * @Method({"GET"})
+     * @ParamConverter
      */
-    public function editAction($code)
+    public function editAction(User $user)
     {
-        $em = $this->getDoctrine()->getManager();
+        $form = $this->createForm('eeemarv_user_type', $user);
 
-        $entity = $em->getRepository('EeemarvBundle:User')->findOneByCode($code);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find User entity.');
-        }
-
-        $editForm = $this->createForm(new UserType(), $entity);
-        $deleteForm = $this->createDeleteForm($code);
-
-        return $this->render('EeemarvBundle:User:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+        return array(
+            'user'      => $user,
+            'form'   => $form->createView(),
+        );
     }
 
     /**
      * Edits an existing User entity.
-     * @Secure(roles="ROLE_ADMIN")
+     * Secure(roles="ROLE_ADMIN")
+     * @Template
+     * @Route("/users/{code}/edit")
+     * @Method({"PUT"})
+     * @ParamConverter
      */
-    public function updateAction(Request $request, $code)
+    public function updateAction(Request $request, User $user)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('EeemarvBundle:User')->findOneByCode($code);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find User entity.');
-        }
-
-        $deleteForm = $this->createDeleteForm($code);
-        $editForm = $this->createForm(new UserType(), $entity);
-        $editForm->bind($request);
+        $form = $this->createForm(new UserType(), $user);
+        $form->bind($request);
 
         if ($editForm->isValid()) {
-            $em->persist($entity);
+            $em->persist($user);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('eeemarv_users_edit', array('code' => $code)));
+            return $this->redirect($this->generateUrl('eeemarv_eeemarv_user_show', array('code' => $code)));
         }
 
         return $this->render('EeemarvBundle:User:edit.html.twig', array(
-            'entity'      => $entity,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'user'      => $user,
+            'form'   => $editForm->createView(),
         ));
     }
 
     /**
      * Deletes a User entity.
-     * @Secure(roles="ROLE_ADMIN")
+     * Secure(roles="ROLE_ADMIN")
+     * @Template
+     * @Route("/users/{code}")
+     * @Method({"DELETE"})
+     * @ParamConverter
      */
-    public function deleteAction(Request $request, $code)
+    public function deleteAction(Request $request, User $user)
     {
-        $form = $this->createDeleteForm($code);
+        $form = $this->createDeleteForm($user->getCode());
         $form->bind($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('EeemarvBundle:User')->findOneByCode($code);
-
-            if (!$entity) {
-                throw $this->createNotFoundException('Unable to find User entity.');
-            }
-
-            $em->remove($entity);
+            $em->remove($user);
             $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('eeemarv_users'));
+        return $this->redirect($this->generateUrl('eeemarv_eeemarv_user_index'));
     }
     
     
-     /**
-     * Lists all User entities.
-     * @Secure(roles="ROLE_USER")
-     */
-
-    public function jsonAction($code)
-    {
-		if ($code){		
-			return $this->remoteAction($code);
-		}	
-
-        $em = $this->getDoctrine()->getManager();
-
-        $ajaxUserArray = $em->getRepository('EeemarvBundle:User')->findAjaxUsers();
-        
-        return new JsonResponse($ajaxUserArray);
-    }   
+     
+    
+     
 
     /**
      * Creates a form to delete a User entity by code
@@ -258,9 +297,9 @@ class UserController extends Controller
      *
      * @return Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm($code)
+    private function createDeleteForm(User $user)
     {
-        return $this->createFormBuilder(array('code' => $code))
+        return $this->createFormBuilder(array('code' => $user->getCode()))
             ->add('code', 'hidden')
             ->getForm()
         ;
