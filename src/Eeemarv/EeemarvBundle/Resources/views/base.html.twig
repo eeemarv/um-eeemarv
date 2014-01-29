@@ -3,6 +3,8 @@
     <head>
 		{% block meta %}
         <meta charset="UTF-8" />
+        <meta name="keywords" content="{{ 'meta_keywords'|trans({}, 'site') }}">
+        <meta name="description" content="{{ 'meta_description'|trans({}, 'site') }}">
         {% endblock %}
         <title>{% block title %}{{ 'name'|trans({}, 'site') }}{% block title_extra %}{% endblock %}{% endblock %}</title>
         {% block stylesheets %}
@@ -15,7 +17,7 @@
     <body>
 		
 	{% block navbar %}
-		<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar navbar-fixed-top">
 		  <div class="navbar-inner">
 			  <div class="container"><a class="brand" href="./"><div>{{ 'name'|trans({}, 'site') }}</div></a>		  			  
 			{% block navbar_left %}
@@ -51,6 +53,10 @@
 	{% endblock %}
 
 	{% block jumbotron %}
+{#
+	<div class="hero-unit">
+	<h1></h1>
+	</div> #}
 	{% endblock %}
 		
 	{% block body %}
@@ -58,7 +64,9 @@
 
 			<div class="row-fluid">
 				<div class="span3">
-					<nav class="sidebar affix" style="width: 263px; padding-top:100px;">
+					
+					
+					<nav class="sidebar affix top-10" style="width: 20%;">
 
 				
 				{{ knp_menu_render('eeemarv_public_menu', {'nav_type': 'stacked_pills'}) }}
@@ -72,7 +80,7 @@
 				{% block content %}
 					<div class="span9">
 						
-						{% include 'EeemarvBundle::flash.html.twig' with { 'close': true } %}					
+						<div class="top-10">{% include 'EeemarvBundle::flash.html.twig' with { 'close': true } %}</div>					
 
 						<div class="page-header">
 							<h4 class="pull-left">{% block page_header_inner %}{% endblock %}</h4>

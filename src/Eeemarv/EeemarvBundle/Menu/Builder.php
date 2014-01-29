@@ -32,7 +32,7 @@ class Builder
 		$route = $request->attributes->get('_route');
         $routeParams = $request->attributes->get('_route_params');
 
-		$item = $menu->addChild('language')->setLabel($this->translator->trans('language_name'))->setCurrent(true);
+		$item = $menu->addChild('language')->setLabel($this->translator->trans('language_name'));
 			
 		foreach ($locales as $locale)
 		{

@@ -51,8 +51,9 @@ eeemarv_trash:
 eeemarv_page:
     resource: @EeemarvBundle/Controller/PageController.php
     type: annotation    
-    
-  
+
+
+
 
 eeemarv_missing_locale:
     pattern: /

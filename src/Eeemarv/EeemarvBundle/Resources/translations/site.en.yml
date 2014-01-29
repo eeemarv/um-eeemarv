@@ -1,10 +1,16 @@
 # eeemarv site.en.yml
 # site-specific naming and translations 
-# to be copied to app/Resources/translations and edited 
+# to be copied to app/Resources/translations and edited
 
 name: eeemarv
-slogan: web application for lets groups
+slogan: open source software for lets groups
+
 letsgroup: eeemarv
 currency_singular: Lets Minute
-currency_plural: Lets Minutes 
+currency_plural: Lets Minutes
+
+meta_keywords: lets, open source, software
+meta_description: open source software for lets groups
+
+ 
    

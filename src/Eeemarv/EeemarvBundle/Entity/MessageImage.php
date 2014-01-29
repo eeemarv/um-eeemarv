@@ -9,7 +9,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity 
  * @ORM\Table(name="message_images")
- * @Gedmo\Uploadable(path="/files", filenameGenerator="Eeemarv\EeemarvBundle\Util\FilenameGenerator", maxSize="200k", allowedTypes="jpg, png, jpeg, gif")
+ * Gedmo\Uploadable(path="/files", filenameGenerator="Eeemarv\EeemarvBundle\Util\FilenameGenerator", maxSize="200k", allowedTypes="jpg, png, jpeg, gif")
+ * @ORM\HasLifecycleCallbacks
  */
 class MessageImage
 {
@@ -28,19 +29,20 @@ class MessageImage
 	
 	/**
 	 * @ORM\Column(name="path", type="string")
-	 * @Gedmo\UploadableFilePath
+	 * Gedmo\UploadableFilePath
 	 */
 	protected $path;	
 
 	/**
 	 * @ORM\Column(name="size", type="decimal")
-	 * @Gedmo\UploadableFileSize
+	 * 
+	 * Gedmo\UploadableFileSize
 	 */
 	protected $size;
 	
 	/**
 	 * @ORM\Column(name="mime_type", type="string")
-	 * @Gedmo\UploadableFileMimeType
+	 * Gedmo\UploadableFileMimeType
 	 */
 	protected $mimeType;	
 	

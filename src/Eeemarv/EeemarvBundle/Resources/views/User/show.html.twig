@@ -31,7 +31,7 @@
                 <td>{{ user.email }}</td>
             </tr>
 
-            <tr>
+     {#       <tr>
                 <th>{{ 'roles'|trans }}</th>
                 <td>{{ user.roles }}</td>
             </tr>
@@ -39,7 +39,7 @@
             <tr>
                 <th>Id</th>
                 <td>{{ user.id }}</td>
-            </tr>
+            </tr> #}
 
             <tr>
                 <th>{{ 'first_name'|trans }}</th>
@@ -71,14 +71,14 @@
                 <th>{{ 'box'|trans }}</th>
                 <td>{{ user.box }}</td>
             </tr>
-            <tr>
+  {#          <tr>
                 <th>{{ 'latitude'|trans }}</th>
                 <td>{{ user.latitude }}</td>
             </tr>
             <tr>
                 <th>{{ 'longitude'|trans }}</th>
                 <td>{{ user.longitude }}</td>
-            </tr>
+            </tr> #}
             <tr>
                 <th>{{ 'phone'|trans }}</th>
                 <td>{{ user.phone }}</td>
@@ -115,21 +115,15 @@
         </tbody>
     </table>
 
-        <ul class="record_actions">
+<ul class="record_actions">
     <li>
         <a href="{{ path('eeemarv_eeemarv_user_index') }}">
             {{ 'back_to_list'|trans }}
         </a>
     </li>
-    <li>
-
-    </li>
-{#    <li>
-
-    </li>  #}
 </ul>
 {% if user.isActive %}
-<a href="{{ path('eeemarv_eeemarv_transaction_newuser', {'code': user.code }) }}" class="btn btn-success">{{ 'button.create_transaction_from_user'|trans }}</a>
+<a href="{{ path('eeemarv_eeemarv_transaction_newuser', {'code': user.code }) }}" class="btn btn-success">{{ 'button.create_transaction'|trans }}</a>
 {% endif %}
 
 

@@ -50,10 +50,10 @@
     </table>
 
 
-<a href="{{ path('eeemarv_eeemarv_transaction_newmessage', {'id': message.id }) }}" class="btn btn-success">{{ 'button.create_transaction_from_message'|trans }}</a>
+<a href="{{ path('eeemarv_eeemarv_transaction_newmessage', {'id': message.id }) }}" class="btn btn-success">{{ 'button.create_transaction'|trans }}</a>
 
 {% if true %}{# message.isCommentable #}
-<div>
+<div class="top-10">
 <table class="table table-striped table-bordered">
 <thead>
 	<tr><th class="span9"><h4>{{ 'comments'|trans }}</h4></th><th class="span3"></th></tr>

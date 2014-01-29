@@ -59,7 +59,7 @@ class AppKernel extends Kernel
 
             new Lsw\MemcacheBundle\LswMemcacheBundle(),
             
-   			       
+     
 			// 
   
             new Eeemarv\EeemarvBundle\EeemarvBundle(),           

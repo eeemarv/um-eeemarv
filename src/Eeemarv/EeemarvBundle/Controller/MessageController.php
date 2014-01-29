@@ -186,11 +186,7 @@ class MessageController extends Controller
      * @ParamConverter 
      */
     public function showAction(Request $request, Message $message, $id, $slug)
-    {
-		if ($slug != $message->getSlug()){
-			return $this->redirect($this->generateUrl('eeemarv_eeemarv_message_show', array('id' => $message->getId(), 'slug' => $message->getSlug())));
-		}	
-				
+    {				
         return array(
             'message'      => $message,
             'delete_form' => $this->createDeleteForm($message)->createView(),
@@ -226,7 +222,7 @@ class MessageController extends Controller
             $this->em->persist($message);
             $this->em->flush();
  			$request->getSession()->getFlashBag()->add('success', 'flash.success.update.message');
-            return $this->redirect($this->generateUrl('eeemarv_eeemarv_message_show', array('id' => $message->getId())));
+            return $this->redirect($this->generateUrl('eeemarv_eeemarv_message_show', array('id' => $message->getId(), 'slug' => $message->getSlug())));
         }
 
         return  $this->render('EeemarvBundle:Message:show.html.twig', array(

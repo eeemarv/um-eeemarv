@@ -59,10 +59,10 @@ You will be asked to fill in some parameters for your project (these are in the 
   * a random unique_id for your letsgroup, you can get one from [eeemarv.net/unique](http://eeemarv.net/unique) Never it change afterwards.
   * a code for your letsgroup, maximum length 8 characters. Use lowercase characters from the english alphabet - and numbers if you wish.
   * locale : code of the fallback locale (language + country) or the main locale. This can be a ISO639-1 two character language code, e.g. `en` for English OR language code extended with an underscore _ and ISO3166 Alpha-2 country code, e.g. `fr_FR` for French/France
-  * locales : array of all locales supported i.g. `[ en, fr ]` all translations have to present (general + site-specific). Note that maintenance grows the more locales your eeeMarv-site supports. 
+  * locales : array of all locales supported i.g. `[ en, fr ]` all translations have to present (general + site-specific).
   * currency_rate : divider to display the value of your currency. Lets-seconds are used by eeemarv internally, 3600/hour. e.g. if your currency unit is worth 30/hour then currency_rate is 120 (30 = 3600/120)    
 	
-The name of your currency and your site-name are site specific translations, these you have to edit in app/resources/translations/
+The name of your currency and your site-name are site specific translations, these you have to edit in `app/resources/translations/site.{locale-code}.yml`. Provide a file for every locale you support.
 
 ### Access by Web Browser
 
@@ -95,14 +95,27 @@ The script returns a status code of `0` if all mandatory requirements are met,
 
 Access the `config.php` script from a browser:
 
-    http://localhost/path/to/eeeMarv/app/web/config.php
+    http://localhost/path/to/eeemarv/app/web/config.php
 
 If you get any warnings or recommendations, fix them before moving on.
 
+### Create Database Schema 
+
+Run command 
+
+    app/console doctrine:schema:update --force
+
 ### Database Fixtures
 
+Run command
+
+	app/console doctrine:fixtures:load
 
 ### Assetic 
+
+run command `assetic:dump`  
+
+    app/console assetic:dump
 
 
 
@@ -120,9 +133,9 @@ For transparency and insight into the release cycle, releases (from version 1.0.
 
 And constructed with the following guidelines:
 
-    Breaking backwards compatibility bumps the major
-    New additions without breaking backwards compatibility bumps the minor
-    Bug fixes and misc changes bump the patch
+  * Breaking backwards compatibility bumps the major
+  * New additions without breaking backwards compatibility bumps the minor
+  * Bug fixes and misc changes bump the patch
 
 For more information on semantic versioning, please visit [http://semver.org/].
 

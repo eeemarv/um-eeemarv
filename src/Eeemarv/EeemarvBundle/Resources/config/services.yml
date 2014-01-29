@@ -9,7 +9,9 @@ services:
       
     eeemarv.unique_id_generator:
         class: Eeemarv\EeemarvBundle\Util\UniqueIdGenerator
-       
+
+    eeemarv.file_namer:
+        class: Eeemarv\EeemarvBundle\Util\FileNamer       
 
 
 

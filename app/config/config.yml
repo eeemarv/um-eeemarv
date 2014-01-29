@@ -70,6 +70,7 @@ doctrine:
         charset:  UTF8
         types:
             datetime: Eeemarv\EeemarvBundle\DoctrineExtensions\DBAL\Types\UTCDateTimeType
+          
        
     orm:
         auto_generate_proxy_classes: %kernel.debug%
@@ -233,6 +234,7 @@ guzzle:
 oneup_uploader:
     mappings:
         gallery:
+            namer: eeemarv.file_namer
             frontend: blueimp
             storage:
                 type: gaufrette
@@ -259,3 +261,4 @@ lsw_memcache:
         default:
             hosts:
               - { dsn: localhost, port: 11211 }
+
