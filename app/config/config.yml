@@ -43,14 +43,14 @@ assetic:
     use_controller: false
     bundles: [ EeemarvBundle ]
     filters:
-#        less:
-#            node: /usr/local/bin/node
-#            node_paths: [/usr/local/lib/node_modules]
-#            apply_to: "\.less$"           
-        lessphp:
-            file: %kernel.root_dir%/../vendor/leafo/lessphp/lessc.inc.php
-            apply_to: "\.less$"
-            preserve_comments: false   
+        less:
+            node: /usr/bin/node   #move this to parameters
+            node_paths: [/usr/lib/node_modules]  #move this to parameters
+            apply_to: "\.less$"           
+#        lessphp:
+#            file: %kernel.root_dir%/../vendor/leafo/lessphp/lessc.inc.php
+#            apply_to: "\.less$"
+#            preserve_comments: false   
         cssrewrite: ~
 
        
@@ -217,8 +217,8 @@ lexik_maintenance:
 
 # braincrafted bootstrap
 
-bc_bootstrap:
-    less_filter: lessphp
+braincrafted_bootstrap:
+    less_filter: less
     jquery_path: %kernel.root_dir%/../web/bundles/bmatznerjquery/js/jquery.js
 
 

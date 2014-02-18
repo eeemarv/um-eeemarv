@@ -7,9 +7,11 @@ use FOS\UserBundle\Controller\SecurityController as BaseController;
 
 class SecurityController extends BaseController
 {
-	/** for providing login on every page **/
+
 
 	private $inlineTemplate = false;
+
+	/**  to be called in template **/
 
     public function inlineLoginAction(Request $request)
     {

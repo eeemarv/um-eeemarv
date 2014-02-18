@@ -40,13 +40,10 @@ class AppKernel extends Kernel
  			new FOS\RestBundle\FOSRestBundle(),                                 
 			new Vich\GeographicalBundle\VichGeographicalBundle(),  
 			new Liip\ImagineBundle\LiipImagineBundle(),
-			
-			new Bc\Bundle\BootstrapBundle\BcBootstrapBundle(),
-//            new Braincrafted\Bundle\BootstrapBundle\BraincraftedBootstrapBundle(),
-			new Bmatzner\FontAwesomeBundle\BmatznerFontAwesomeBundle(),
+
+            new Braincrafted\Bundle\BootstrapBundle\BraincraftedBootstrapBundle(),
 			new Bmatzner\JQueryBundle\BmatznerJQueryBundle(),
-			new Bmatzner\JQueryUIBundle\BmatznerJQueryUIBundle(),						
-			
+								
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),			 
  			new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
 			new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(), 

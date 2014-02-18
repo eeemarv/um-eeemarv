@@ -1,5 +1,4 @@
 {% extends 'EeemarvBundle::base.html.twig' %}
-{# {% form_theme form 'EeemarvBundle:Form:fields.html.twig' %} #}
 
 {% block page_header_inner %}{{ message.subject }}{% endblock %}
 {% block buttons %}
@@ -56,7 +55,7 @@
 <div class="top-10">
 <table class="table table-striped table-bordered">
 <thead>
-	<tr><th class="span9"><h4>{{ 'comments'|trans }}</h4></th><th class="span3"></th></tr>
+	<tr><th class="col-md-9"><h4>{{ 'comments'|trans }}</h4></th><th class="col-md-3"></th></tr>
 </thead>
 <tbody id="comments">
    <tr class="ajax-loader"><td colspan="2"><div></div></td></tr>

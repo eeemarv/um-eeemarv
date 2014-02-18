@@ -248,19 +248,19 @@ class UserController extends Controller
      */
     public function updateAction(Request $request, User $user)
     {
-        $form = $this->createForm(new UserType(), $user);
+        $form = $this->createForm('eeemarv_user_type', $user);
         $form->bind($request);
 
-        if ($editForm->isValid()) {
-            $em->persist($user);
-            $em->flush();
+        if ($form->isValid()) {
+            $this->em->persist($user);
+            $this->em->flush();
 
-            return $this->redirect($this->generateUrl('eeemarv_eeemarv_user_show', array('code' => $code)));
+            return $this->redirect($this->generateUrl('eeemarv_eeemarv_user_show', array('code' => $user->getCode())));
         }
 
         return $this->render('EeemarvBundle:User:edit.html.twig', array(
             'user'      => $user,
-            'form'   => $editForm->createView(),
+            'form'   => $form->createView(),
         ));
     }
 
@@ -278,8 +278,8 @@ class UserController extends Controller
         $form->bind($request);
 
         if ($form->isValid()) {
-            $em->remove($user);
-            $em->flush();
+            $this->em->remove($user);
+            $this->em->flush();
         }
 
         return $this->redirect($this->generateUrl('eeemarv_eeemarv_user_index'));

@@ -24,10 +24,17 @@ Requirements
   * phpunit 3.6+ (optional)
   * [composer](http://getcomposer.org/) (see Installation)
   * MySQL 5.5+
+  * [LESS compiler](http://www.lesscss.org/) to compile the stylesheets of Twitter Bootstrap. To install LESS, you need NPM.  
 
 
 Installation
 --------------
+
+### LESS
+
+    npm install -g less
+
+// todo node and node_paths params from assetic ->composer
 
 ### Git  
 

@@ -59,8 +59,7 @@ class TransactionEventListener implements EventSubscriberInterface
         $toCodeArray = explode('/', $toCode);
 
 		if (sizeof($toCodeArray) == 0) {
-			$msg = 'The code is empty.';
-            throw new \Exception(sprintf($msg, $toCode));
+            throw new \Exception('The code is empty.');
         }		
 
         $toUser = $this->em

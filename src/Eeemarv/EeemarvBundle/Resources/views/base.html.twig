@@ -1,92 +1,88 @@
 <!DOCTYPE html>
 <html lang="{{ app.request.locale }}">
-    <head>
-		{% block meta %}
-        <meta charset="UTF-8" />
-        <meta name="keywords" content="{{ 'meta_keywords'|trans({}, 'site') }}">
-        <meta name="description" content="{{ 'meta_description'|trans({}, 'site') }}">
-        {% endblock %}
-        <title>{% block title %}{{ 'name'|trans({}, 'site') }}{% block title_extra %}{% endblock %}{% endblock %}</title>
-        {% block stylesheets %}
-        <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />
-		<link rel="stylesheet" type="text/css" href="{{ asset('bundles/eeemarv/css/common.css') }}" />
-        {% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-		
-	{% block navbar %}
-		<div class="navbar navbar-fixed-top">
-		  <div class="navbar-inner">
-			  <div class="container"><a class="brand" href="./"><div>{{ 'name'|trans({}, 'site') }}</div></a>		  			  
-			{% block navbar_left %}
-				{% if is_granted('ROLE_USER') %}
-					<div class="nav-collapse collapse">
-						{{ knp_menu_render('eeemarv_user_menu', {'nav_type': 'navbar'}) }}
-					</div>		
-				{% endif %}			
-			{% endblock %}
- 
-			{% block navbar_lang %}	
-				{% if locales|length > 1 %}
-				  <div class="nav-collapse collapse pull-right">
-					{{ knp_menu_render('eeemarv_lang_menu', {'nav_type': 'navbar'}) }}
-				  </div>
-				{% endif %}
-			{% endblock %}
-			  
-			{% block navbar_right %}
-				{% if is_granted('ROLE_USER') %}
-					<div class="nav-collapse collapse pull-right">
-					{{ knp_menu_render('eeemarv_personal_menu', {'nav_type': 'navbar'}) }}
-					</div>			
-				{% else %}
-					{% block inline_login %}
-						{% render(controller('FOSUserBundle:Security:inlineLogin')) %}
-					{% endblock %}
-				{% endif %}
-			{% endblock %} 
-			  </div>
-		  </div>
-		</div>				
+	
+<head>
+	{% block meta %}
+	<meta charset="UTF-8" />
+	<meta name="keywords" content="{{ 'meta_keywords'|trans({}, 'site') }}">
+	<meta name="description" content="{{ 'meta_description'|trans({}, 'site') }}">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	{% endblock %}
+	<title>{% block title %}{{ 'name'|trans({}, 'site') }}{% block title_extra %}{% endblock %}{% endblock %}</title>
+	{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
+	<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" />
+	<link rel="stylesheet" type="text/css" href="{{ asset('bundles/eeemarv/css/common.css') }}" />
+	{% endblock %}        
+	<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />   
+</head>
+    
+<body>
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="{{ path('eeemarv_eeemarv_page_showhome') }}">{{ 'name'|trans({}, 'site') }}</a>
+    </div>
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+		{% if is_granted('ROLE_USER') %}
+			{{ knp_menu_render('eeemarv_user_menu', { 'style': 'navbar' }) }}
+        {% endif %}	
+        
+        
+        
+        {% if locales|length > 1 %}
+			{{ knp_menu_render('eeemarv_lang_menu', { 'style': 'navbar-right' }) }}
+        {% endif %}        
+		{% if is_granted('ROLE_USER') %}
+			{{ knp_menu_render('eeemarv_personal_menu', {'style': 'navbar-right'}) }}			
+		{% else %}
+			{% block inline_login %}
+				{% render(controller('FOSUserBundle:Security:inlineLogin')) %}
+			{% endblock %}
+			{{ knp_menu_render('eeemarv_public_menu', {'style': 'navbar-right'}) }}		
+		{% endif %}
+				
+    </div>
+	</nav>
+	
+
 
 	{% block jumbotron %}
-{#
-	<div class="hero-unit">
-	<h1></h1>
-	</div> #}
+
+	<div class="jumbotron">
+	<h1>eeemarv</h1>
+	<p>Web software for Lets groups</p>
+	</div>
 	{% endblock %}
 		
 	{% block body %}
 		<div class="container">
 
-			<div class="row-fluid">
-				<div class="span3">
-					
-					
-					<nav class="sidebar affix top-10" style="width: 20%;">
-
-				
-				{{ knp_menu_render('eeemarv_public_menu', {'nav_type': 'stacked_pills'}) }}
+			<div class="row">
+				{#<div class="col-md-3">
+					<nav class="sidebar" data-spy="affix" data-offset-top="250">
+				{{ knp_menu_render('eeemarv_public_menu', {'style': 'stacked-pills'}) }}
 				
 				
 				</nav>
 
-				</div>
+				</div>#}
 
 		  
 				{% block content %}
-					<div class="span9">
-						
-						<div class="top-10">{% include 'EeemarvBundle::flash.html.twig' with { 'close': true } %}</div>					
+					<div class="col-md-12{% block content_class%}{% endblock %}">
+						{% include 'BraincraftedBootstrapBundle::flash.html.twig' with { 'close': true } %}
 
 						<div class="page-header">
 							<h4 class="pull-left">{% block page_header_inner %}{% endblock %}</h4>
 							
 							<div class="pull-right">{% block buttons %}{% endblock %}</div>
-							<div class="clearfix info"></div>
+							<div class="clearfix"></div>
 						</div>   
 
 						{% block inner_content %}
@@ -114,23 +110,24 @@
 		</footer>
 	{% endblock %}
 
+
 	{% javascripts
-		'//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.js'
-		'//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js' 	
-
-		'../vendor/twitter/bootstrap/js/bootstrap-transition.js'
-		'../vendor/twitter/bootstrap/js/bootstrap-alert.js'
-		'../vendor/twitter/bootstrap/js/bootstrap-button.js'
-		'../vendor/twitter/bootstrap/js/bootstrap-carousel.js'
-		'../vendor/twitter/bootstrap/js/bootstrap-collapse.js'
-		'../vendor/twitter/bootstrap/js/bootstrap-dropdown.js'
-		'../vendor/twitter/bootstrap/js/bootstrap-modal.js'
-		'../vendor/twitter/bootstrap/js/bootstrap-tooltip.js'
-		'../vendor/twitter/bootstrap/js/bootstrap-popover.js'
-		'../vendor/twitter/bootstrap/js/bootstrap-scrollspy.js'
-		'../vendor/twitter/bootstrap/js/bootstrap-tab.js'
-
-		'../vendor/twitter/bootstrap/js/bootstrap-affix.js'
+		
+		'//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js' 
+		'bundles/bmatznerjquery/js/jquery.js'
+		
+		'../vendor/twbs/bootstrap/js/affix.js'
+		'../vendor/twbs/bootstrap/js/alert.js'
+		'../vendor/twbs/bootstrap/js/button.js'
+		'../vendor/twbs/bootstrap/js/carousel.js'
+		'../vendor/twbs/bootstrap/js/collapse.js'
+		'../vendor/twbs/bootstrap/js/dropdown.js'
+		'../vendor/twbs/bootstrap/js/modal.js'
+		'../vendor/twbs/bootstrap/js/popover.js'
+		'../vendor/twbs/bootstrap/js/scrollspy.js'
+		'../vendor/twbs/bootstrap/js/tab.js'
+		'../vendor/twbs/bootstrap/js/tooltip.js'
+		'../vendor/twbs/bootstrap/js/transition.js'	
 
 		'http://twitter.github.com/hogan.js/builds/2.0.0/hogan-2.0.0.js'				
 		'../vendor/twitter/typeahead.js/dist/typeahead.js'
@@ -141,14 +138,8 @@
 	%} <script src="{{ asset_url }}"></script>
 	{% endjavascripts %}
 	
-	{% block javascripts %}
-{#	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>  #}
-{#		<script>window.jQuery || document.write('<script src="{{ asset('js/jquery.js') }}"><\/script>')</script> #}
-{#		<script src="{{ asset('js/bootstrap.js') }}"></script> #}
-{#		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>  #}
-	{% endblock %}	
-
-		{% block javascripts_extra %}{% endblock %}    
+	{% block javascripts %}{% endblock %}	
+	{% block javascripts_extra %}{% endblock %}    
 
     </body>
 </html>

@@ -1,5 +1,5 @@
 {% extends 'EeemarvBundle::base.html.twig' %}
-{% form_theme form 'EeemarvBundle:Form:fields.html.twig' %}
+
 
 {% block page_header_inner %}{{ 'new_user'|trans  }}{% endblock %}
 
@@ -10,99 +10,93 @@
     
 {{ form_errors(form) }}
 
-{{ form_label(form.email) }}
-{{ form_errors(form.email) }}
-{{ form_widget(form.email) }}
+<div class="controls controls-row">
+<div class="col-md-12">
+{{ form_row(form.email) }}
+</div></div>
 
 <div class="controls controls-row">
-<div class="span2">
-{{ form_label(form.code) }}
-{{ form_errors(form.code) }}
-{{ form_widget(form.code) }}
+<div class="col-md-3">
+{{ form_row(form.code) }}
+
 </div>
 
-<div class="span10">
-{{ form_label(form.username) }}
-{{ form_errors(form.username) }}
-{{ form_widget(form.username) }}
+<div class="col-md-9">
+{{ form_row(form.username) }}
 </div>
 </div>
 
 <div class="controls controls-row">
-<div class="span6">
-{{ form_label(form.firstName) }}
-{{ form_errors(form.firstName) }}
-{{ form_widget(form.firstName) }}
+<div class="col-md-6">
+{{ form_row(form.firstName) }}
+
 </div>
 
-<div class="span6">
-{{ form_label(form.lastName) }}
-{{ form_errors(form.lastName) }}
-{{ form_widget(form.lastName) }}
+<div class="col-md-6">
+{{ form_row(form.lastName) }}
+
 </div>
 </div>
 
 
 <div class="controls controls-row">
+<div class="col-md-12">
+{{ form_row(form.birthday) }}
+</div>
+</div>
 
-{{ form_label(form.birthday) }}
-{{ form_errors(form.birthday) }}
-{{ form_widget(form.birthday) }}
-
-{# {{ form_label(form.gender) }} #}
-{{ form_errors(form.gender) }}
-{{ form_widget(form.gender, {'attr':{'class':'span6 form-inline'}}) }}
-
+<div class="controls controls-row">
+<div class="col-md-12">
+{{ form_row(form.gender) }}
+</div>
 </div>
 
 
 <div class="controls controls-row">
-<div class="span6">
-{{ form_label(form.street) }}
-{{ form_errors(form.street) }}
-{{ form_widget(form.street) }}
-</div>
-<div class="span3">
+<div class="col-md-6">
+{{ form_row(form.street) }}
 
-{{ form_label(form.houseNumber) }}
-{{ form_errors(form.houseNumber) }}
-{{ form_widget(form.houseNumber) }}
 </div>
-<div class="span3">
-{{ form_label(form.box) }}
-{{ form_errors(form.box) }}
-{{ form_widget(form.box) }}
-</div>
-</div>
+<div class="col-md-3">
 
+{{ form_row(form.houseNumber) }}
 
-{{ form_label(form.place) }}
-{{ form_errors(form.place) }}
-{{ form_widget(form.place) }}
+</div>
+<div class="col-md-3">
+{{ form_row(form.box) }}
+</div>
+</div>
 
 <div class="controls controls-row">
-<div class="span6">
-{{ form_label(form.phone) }}
-{{ form_errors(form.phone) }}
-{{ form_widget(form.phone) }}
+<div class="col-md-12">
+{{ form_row(form.place) }}
+</div>
 </div>
 
-<div class="span6">
-{{ form_label(form.mobile) }}
-{{ form_errors(form.mobile) }}
-{{ form_widget(form.mobile) }}
+<div class="controls controls-row">
+<div class="col-md-6">
+{{ form_row(form.phone) }}
+</div>
+
+<div class="col-md-6">
+{{ form_row(form.mobile) }}
+
 </div></div>   
- 
-{{ form_label(form.website) }}
-{{ form_errors(form.website) }}
-{{ form_widget(form.website) }} 
- 
-{{ form_label(form.isActive) }}
-{{ form_errors(form.isActive) }}
-{{ form_widget(form.isActive) }}    
-    
+<div class="controls controls-row">
+<div class="col-md-12"> 
+{{ form_row(form.website) }}
+</div>
+</div>
+<div class="controls controls-row">
+<div class="col-md-12">  
+{{ form_row(form.isActive) }}
+ </div>
+</div>  
+<div class="controls controls-row">
+<div class="col-md-12">      
 <p><button type="submit" class="btn btn-success">{{ 'create'|trans }}</button></p>   
-    
+ </div>
+</div>     
     
 {{ form_rest(form) }}
 

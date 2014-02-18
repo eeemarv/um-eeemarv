@@ -1,24 +1,64 @@
 {% extends 'EeemarvBundle::base.html.twig' %}
-{% form_theme form 'EeemarvBundle:Form:fields.html.twig' %}
-
 
 {% block page_header_inner %}{{ 'user_edit'|trans }}{% endblock %}
 
-{% block inner_content %}
+{% block inner_content -%}
 
-    <form action="{{ path('eeemarv_eeemarv_user_update', { 'code': user.code }) }}" method="post" {{ form_enctype(form) }}>
-        <input type="hidden" name="_method" value="PUT" />
-        {{ form_widget(form) }}
-        <p>
-            <button type="submit" class="btn btn-primary">{{ 'edit'|trans }}</button>
-        </p>
-    </form>
+<form action="{{ path('eeemarv_eeemarv_user_update', { 'code': user.code }) }}" method="post" {{ form_enctype(form) }}>
+<input type="hidden" name="_method" value="PUT" />
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('eeemarv_eeemarv_user_index') }}">
-            {{ 'back_to_list'|trans }}
-        </a>
-    </li>
-</ul>
-{% endblock %}
+{{ form_errors(form) }}
+
+<div class="controls controls-row">
+<div class="col-md-12">{{ form_row(form.email) }}</div>
+</div>
+
+<div class="controls controls-row">
+<div class="col-md-3">{{ form_row(form.code) }}</div>
+<div class="col-md-9">{{ form_row(form.username) }}</div>
+</div>
+
+<div class="controls controls-row">
+<div class="col-md-6">{{ form_row(form.firstName) }}</div>
+<div class="col-md-6">{{ form_row(form.lastName) }}</div>
+</div>
+
+<div class="controls controls-row">
+<div class="col-md-12">{{ form_row(form.birthday) }}</div>
+</div>
+
+<div class="controls controls-row">
+<div class="col-md-12">{{ form_row(form.gender) }}</div>
+</div>
+
+<div class="controls controls-row">
+<div class="col-md-6">{{ form_row(form.street) }}</div>
+<div class="col-md-3">{{ form_row(form.houseNumber) }}</div>
+<div class="col-md-3">{{ form_row(form.box) }}</div>
+</div>
+
+<div class="controls controls-row">
+<div class="col-md-12">{{ form_row(form.place) }}</div>
+</div>
+
+<div class="controls controls-row">
+<div class="col-md-6">{{ form_row(form.phone) }}</div>
+<div class="col-md-6">{{ form_row(form.mobile) }}</div>
+</div>
+  
+<div class="controls controls-row">
+<div class="col-md-12">{{ form_row(form.website) }}</div>
+</div>
+
+<div class="controls controls-row">
+<div class="col-md-12">{{ form_row(form.isActive) }}</div>
+</div>
+  
+<div class="controls controls-row">
+<div class="col-md-12"><p><button type="submit" class="btn btn-primary">{{ 'edit'|trans }}</button></p></div>
+</div>     
+    
+{{ form_rest(form) }}
+
+</form>
+{%- endblock %}

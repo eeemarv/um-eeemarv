@@ -77,6 +77,25 @@ class PageController extends Controller
         );
     }
  
+     /**
+     * @Secure(roles="ROLE_ANONYMOUS")
+     * @Template
+     * @Route("/")
+     * @Method({"GET"})
+     */
+    public function showHomeAction(Request $request)
+    {
+		$page = new Page();
+		
+		
+        return $this->render('EeemarvBundle:Page:showPublic.html.twig', array(
+            'page' => $page,
+        ));
+    } 
+ 
+ 
+ 
+ 
  
  
  

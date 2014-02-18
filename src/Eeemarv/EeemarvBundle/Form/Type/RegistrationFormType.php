@@ -64,6 +64,8 @@ class RegistrationFormType extends BaseType
 				'required' => false))
 			->add('mobile', 'text', array(
 				'required' => false))
+			->add('website', 'url', array(
+				'required' => false))								
 			->add('uniqueId', 'hidden', array(
 				'data' => $this->uniqueIdGenerator->generate(),
 				))	

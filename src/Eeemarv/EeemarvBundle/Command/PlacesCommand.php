@@ -23,19 +23,12 @@ class PlacesCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {	
 		$em = $this->getContainer()->get('doctrine')->getEntityManager();
-
-		$q = $em->createQueryBuilder()			// to be moved to repository
-			->select('p.id, p.postalCode, t.name, p.country') 
-			->from('EeemarvBundle:Place', 'p')
-			->leftJoin('p.defaultTranslation', 't')
-			->getQuery();	
-		$placeArray =  $q->getArrayResult();		
-		
+		$query = $em->createQuery('select p.id, p.postalCode, p.name, p.country from Eeemarv\EeemarvBundle\Entity\Place p');
+		$places = $query->getArrayResult();
 		$table = $this->getHelperSet()->get('table');
 		$table->setHeaders(array('id', 'postal code', 'name', 'country'))
-			->setRows($placeArray);
+			->setRows($places);
 		$table->render($output);
-
     }
     
     protected function interact(InputInterface $input, OutputInterface $output)

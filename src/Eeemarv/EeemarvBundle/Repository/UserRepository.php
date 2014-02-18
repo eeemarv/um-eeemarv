@@ -92,7 +92,7 @@ class UserRepository extends EntityRepository
 		$query = $this->getEntityManager()->createQueryBuilder()
 			->select('max(u.code)') 
 			->from('EeemarvBundle:User', 'u') 
-			->where('u.active = 0')
+			->where('u.isActive = 0')
 			->andWhere('u.code like \'--%\'')
 			->getQuery();	
 		return $query->getSingleScalarResult();

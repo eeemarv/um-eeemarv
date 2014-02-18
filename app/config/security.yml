@@ -44,7 +44,7 @@ security:
                 check_path: fos_user_security_check
             logout:
                 path: fos_user_security_logout
-                target: eeemarv_eeemarv_home
+                target: eeemarv_eeemarv_page_showhome
             anonymous: true
             switch_user: true
 

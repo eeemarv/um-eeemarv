@@ -31,15 +31,7 @@
                 <td>{{ user.email }}</td>
             </tr>
 
-     {#       <tr>
-                <th>{{ 'roles'|trans }}</th>
-                <td>{{ user.roles }}</td>
-            </tr>
 
-            <tr>
-                <th>Id</th>
-                <td>{{ user.id }}</td>
-            </tr> #}
 
             <tr>
                 <th>{{ 'first_name'|trans }}</th>
@@ -115,13 +107,7 @@
         </tbody>
     </table>
 
-<ul class="record_actions">
-    <li>
-        <a href="{{ path('eeemarv_eeemarv_user_index') }}">
-            {{ 'back_to_list'|trans }}
-        </a>
-    </li>
-</ul>
+
 {% if user.isActive %}
 <a href="{{ path('eeemarv_eeemarv_transaction_newuser', {'code': user.code }) }}" class="btn btn-success">{{ 'button.create_transaction'|trans }}</a>
 {% endif %}

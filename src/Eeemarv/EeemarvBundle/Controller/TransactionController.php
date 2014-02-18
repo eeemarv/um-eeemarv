@@ -139,9 +139,14 @@ class TransactionController extends Controller
             $transaction->setFromName($user->getUsername());
             $userRepo = $this->em->getRepository('EeemarvBundle:User');     
             $toUser = $userRepo->findOneBy(array('code' => $transaction->getToCode()));
-            // exception
             
-            
+            if ($toUser == $user){
+				$request->getSession()->getFlashBag()->add('error', 'flash.error.same_user');
+				return $this->render('EeemarvBundle:Transaction:new.html.twig', array(
+					'form'   => $form->createView(),
+					));				
+			}
+			
             $distance = $userRepo->getDistance($user, $toUser);
 			$transaction->setDistance($distance);
             $transaction->setToName($toUser->getUsername());
@@ -159,7 +164,6 @@ class TransactionController extends Controller
         }
 
         return $this->render('EeemarvBundle:Transaction:new.html.twig', array(
-       //     'transaction' => $transaction,
             'form'   => $form->createView(),
 			));
     }

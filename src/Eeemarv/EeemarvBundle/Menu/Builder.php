@@ -27,19 +27,20 @@ class Builder
     {		
         $menu = $this->factory->createItem('root');
         
-		$current_locale = $request->getLocale();
+//		$current_locale = $request->getLocale();
 		
 		$route = $request->attributes->get('_route');
         $routeParams = $request->attributes->get('_route_params');
 
-		$item = $menu->addChild('language')->setLabel($this->translator->trans('language_name'));
+		$item = $menu->addChild('language')
+			->setLabel($this->translator->trans('language_name'));
 			
 		foreach ($locales as $locale)
 		{
-			$current = ($current_locale === $locale) ? true : false;
+		//	$current = ($current_locale === $locale) ? true : false;
 			$item->addChild($locale, array('route' => $route, 'routeParameters' => array_merge($routeParams, array('_locale' => $locale)))) //'org_locale' => $current_locale
-				->setLabel($this->translator->trans('language_name', array(), 'messages', $locale))
-				->setCurrent($current);
+				->setLabel($this->translator->trans('language_name', array(), 'messages', $locale));
+		//		->setCurrent($current)
 		}	
 		
         return $menu;
@@ -102,13 +103,12 @@ class Builder
         
         $menu->setCurrentUri($request->getRequestUri()); //
         
-		$menu->addChild('login', array('route' => 'fos_user_security_login'))
-			->setLabel($this->translator->trans('login'));
-        $menu->addChild('register', array('route' => 'fos_user_registration_register'))
-			->setLabel($this->translator->trans('registration'));
 		$menu->addChild('contact', array('route' => 'eeemarv_eeemarv_default_contact'))
 			->setLabel($this->translator->trans('contact'));
-
+        $menu->addChild('register', array('route' => 'fos_user_registration_register'))
+			->setLabel($this->translator->trans('registration'));						
+		$menu->addChild('login', array('route' => 'fos_user_security_login'))
+			->setLabel($this->translator->trans('login'));
 
         return $menu;
     }    

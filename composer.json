@@ -2,7 +2,7 @@
     "name": "marttii/eeemarv",
     "license": "MIT",
     "type": "project",
-    "description": "Web Application for Lets Groups in PHP/Symfony2",
+    "description": "Web Application for Lets Groups with PHP/Symfony2",
     "autoload": {
         "psr-0": { "": "src/" }
     },
@@ -25,7 +25,7 @@
 		"jms/serializer-bundle": "0.13.x-dev",
 		"jms/i18n-routing-bundle": "1.1.x-dev",
 
-        "egeloen/ckeditor-bundle": "2.*",
+        "egeloen/ckeditor-bundle": "2.1.*",
 
         "knplabs/knp-menu-bundle": "1.1.*",
 		"knplabs/knp-paginator-bundle": "dev-master",
@@ -38,14 +38,10 @@
 
         "vich/geographical-bundle": "dev-master",
         "liip/imagine-bundle": "dev-master",
-        "braincrafted/bootstrap-bundle": "1.4.*",
-        "leafo/lessphp": "0.4.*",
-        "twitter/bootstrap": "2.3.*",
+        "braincrafted/bootstrap-bundle": "~2.0",
+        "twbs/bootstrap": "3.0.*",
         "twitter/typeahead.js": "dev-master",
-        "bmatzner/fontawesome-bundle": "*",
-        "bmatzner/jquery-bundle": "dev-master",
-        "bmatzner/jquery-ui-bundle": "dev-master",
-         
+        "bmatzner/jquery-bundle": "dev-master",    
  
         "stof/doctrine-extensions-bundle": "dev-master",       
 		"doctrine/migrations": "dev-master",

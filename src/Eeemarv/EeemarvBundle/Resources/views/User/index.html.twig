@@ -17,12 +17,12 @@
     <table class="table table-striped table-condensed">
         <thead>
             <tr><th>
-				<div class="row-fluid">				
-                    <div class="span2">{{ 'code'|trans }}</div> 				
-					<div class="span4">{{ 'username'|trans }}</div>
-					<div class="span2">{{ 'balance'|trans }}</div>
-					<div class="span2">{{ 'distance'|trans }}</div>
-					<div class="span2">{{ 'messages'|trans }}</div>
+				<div class="row">				
+                    <div class="col-md-2">{{ 'code'|trans }}</div> 				
+					<div class="col-md-4">{{ 'username'|trans }}</div>
+					<div class="col-md-2">{{ 'balance'|trans }}</div>
+					<div class="col-md-2">{{ 'distance'|trans }}</div>
+					<div class="col-md-2">{{ 'messages'|trans }}</div>
 					
 				</div> 
             </th></tr>
@@ -31,12 +31,12 @@
         {% for user in users %}
             <tr{% if not user.isActive %} class="inactive"{% elseif user.isSystemAccount %} class="info"{% elseif user.externalPassword %} class="warning"{% elseif user.isLeaving %} class="error"{% elseif (user.activatedAt|date('U') > new_user_time) and user.isActive %} class="success"{% endif %}>
             <td>
- 				<div class="row-fluid">				
-                    <div class="span2"><a href="{{ path('eeemarv_eeemarv_user_show', { 'code': user.code }) }}">{{ user.code|e }}</a></div> 				
-					<div class="span4"><a href="{{ path('eeemarv_eeemarv_user_show', { 'code': user.code }) }}">{{ user.username|e }}</a></div>
-					<div class="span2"><a href="{{ path('eeemarv_eeemarv_transaction_user', { 'code': user.code }) }}">{{ user.balance // currency_rate }}</a></div>
-					<div class="span2">{{ user.distance|distance }}</div>
-					<div class="span2">{% if user.messageCount %}<a href="{{ path('eeemarv_eeemarv_message_user', { 'code': user.code }) }}">{{ user.messageCount }}</a>{% else %}0{% endif %}</div>
+ 				<div class="row">				
+                    <div class="col-md-2"><a href="{{ path('eeemarv_eeemarv_user_show', { 'code': user.code }) }}">{{ user.code|e }}</a></div> 				
+					<div class="col-md-4"><a href="{{ path('eeemarv_eeemarv_user_show', { 'code': user.code }) }}">{{ user.username|e }}</a></div>
+					<div class="col-md-2"><a href="{{ path('eeemarv_eeemarv_transaction_user', { 'code': user.code }) }}">{{ user.balance // currency_rate }}</a></div>
+					<div class="col-md-2">{{ user.distance|distance }}</div>
+					<div class="col-md-2">{% if user.messageCount %}<a href="{{ path('eeemarv_eeemarv_message_user', { 'code': user.code }) }}">{{ user.messageCount }}</a>{% else %}0{% endif %}</div>
 				</div>              
             </td></tr>
         {% endfor %}
