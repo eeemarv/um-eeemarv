@@ -58,6 +58,19 @@ class AppKernel extends Kernel
             
      
 			// 
+
+
+			new Sonata\CacheBundle\SonataCacheBundle(),
+			new Sonata\CoreBundle\SonataCoreBundle(),
+			new Sonata\BlockBundle\SonataBlockBundle(),			
+			new Sonata\SeoBundle\SonataSeoBundle(),
+			new Sonata\NotificationBundle\SonataNotificationBundle(),
+			new Sonata\EasyExtendsBundle\SonataEasyExtendsBundle(),
+			new Sonata\PageBundle\SonataPageBundle(),
+			new Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle(),
+			new Application\Sonata\PageBundle\ApplicationSonataPageBundle(),
+			
+			// 
   
             new Eeemarv\EeemarvBundle\EeemarvBundle(),           
         );

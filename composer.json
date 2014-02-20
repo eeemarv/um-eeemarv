@@ -62,7 +62,18 @@
         "oneup/uploader-bundle": "1.0.*@dev",
         "blueimp/jquery-file-upload": "dev-master",
 
-        "leaseweb/memcache-bundle": "*"
+        "leaseweb/memcache-bundle": "*",
+        
+        "sonata-project/cache-bundle": "~2.1",
+        "sonata-project/block-bundle": "~2.2",
+        "sonata-project/seo-bundle": "~1.1",
+        "sonata-project/easy-extends-bundle": "~2.1",
+        "sonata-project/notification-bundle": "~2.2",
+        "sonata-project/admin-bundle": "~2.2",
+        "sonata-project/doctrine-orm-admin-bundle": "~2.2",
+        "sonata-project/jquery-bundle": "~1.9",
+        "sonata-project/page-bundle": "~2.3",
+        "symfony-cmf/routing-bundle": "~1.1"
         
      
     },
