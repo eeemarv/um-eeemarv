@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity 
- * @ORM\Table(name="message_images")
+ * @ORM\Table(name="message_image")
  * Gedmo\Uploadable(path="/files", filenameGenerator="Eeemarv\EeemarvBundle\Util\FilenameGenerator", maxSize="200k", allowedTypes="jpg, png, jpeg, gif")
  * @ORM\HasLifecycleCallbacks
  */

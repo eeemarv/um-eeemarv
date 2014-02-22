@@ -263,6 +263,14 @@ lsw_memcache:
               - { dsn: localhost, port: 11211 }
 
 
+# sonata notification
+
+sonata_notification:
+    backend: sonata.notification.backend.runtime
+
+
+
+
 # sonata block
 
 sonata_block:
@@ -291,8 +299,24 @@ sonata_page:
     use_streamed_response: false #false in debug mode     
     default_template: default # template key from templates section, used as default
     ignore_route_patterns:
-        - ^(.*)admin(.*)   # ignore admin route, ie route containing 'admin'
+        - ^(.*)admin(.*)   # ignore admin route, ie route containing 'admin'        
         - ^_(.*)          # ignore symfony routes
+        - ^(.*)eeemarv_user(.*)
+        - ^(.*)eeemarv_message(.*)
+        - ^(.*)eeemarv_transaction(.*)
+        - ^(.*)eeemarv_comment(.*)
+        - ^(.*)eeemarv_trash(.*)
+        - ^(.*)eeemarv_default(.*)
+        - ^(.*)eeemarv_place(.*)
+        - ^(.*)eeemarv_category(.*)
+        - ^(.*)eeemarv_missing_locale(.*)
+        - ^(.*)fos_user_security_check(.*)
+        - ^(.*)fos_user_security_logout(.*)
+        - ^(.*)fos_user_registration_check_email(.*)
+        - ^(.*)fos_user_registration_confirm(.*)
+        - ^(.*)fos_user_registration_confirmed(.*)
+        - ^(.*)fos_user_resetting(.*)
+        - ^(.*)fos_user_change_password(.*)
 
     ignore_routes:
         - sonata_page_cache_esi
@@ -331,3 +355,40 @@ cmf_routing:
         routers_by_id:
             sonata.page.router: 150
             jms_i18n_routing.router: 100
+
+# sonata media
+
+sonata_media:
+    # if you don't use default namespace configuration
+    #class:
+    #    media: MyVendor\MediaBundle\Entity\Media
+    #    gallery: MyVendor\MediaBundle\Entity\Gallery
+    #    gallery_has_media: MyVendor\MediaBundle\Entity\GalleryHasMedia
+    default_context: default
+    db_driver: doctrine_orm 
+    contexts:
+        default:  # the default context is mandatory
+            providers:
+                - sonata.media.provider.dailymotion
+                - sonata.media.provider.youtube
+                - sonata.media.provider.image
+                - sonata.media.provider.file
+
+            formats:
+                small: { width: 100 , quality: 70}
+                big:   { width: 500 , quality: 70}
+
+    cdn:
+        server:
+            path: /uploads/media # http://media.sonata-project.org/
+
+    filesystem:
+        local:
+            directory:  %kernel.root_dir%/../web/uploads/media
+            create:  true #false
+    providers:
+        image:
+            resizer: sonata.media.resizer.square
+            
+            
+            

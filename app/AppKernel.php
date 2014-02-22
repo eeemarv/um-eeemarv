@@ -20,7 +20,7 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             
-            // 
+            // JMS
  
 			new JMS\AopBundle\JMSAopBundle(),           
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
@@ -67,8 +67,15 @@ class AppKernel extends Kernel
 			new Sonata\NotificationBundle\SonataNotificationBundle(),
 			new Sonata\EasyExtendsBundle\SonataEasyExtendsBundle(),
 			new Sonata\PageBundle\SonataPageBundle(),
+			new Sonata\jQueryBundle\SonatajQueryBundle(),
+			new Sonata\DoctrineORMAdminBundle\SonataDoctrineORMAdminBundle(),
+			new Sonata\AdminBundle\SonataAdminBundle(),
+			new Sonata\MediaBundle\SonataMediaBundle(),
 			new Symfony\Cmf\Bundle\RoutingBundle\CmfRoutingBundle(),
 			new Application\Sonata\PageBundle\ApplicationSonataPageBundle(),
+			new Application\Sonata\NotificationBundle\ApplicationSonataNotificationBundle(),
+			new Application\Sonata\MediaBundle\ApplicationSonataMediaBundle(),
+			
 			
 			// 
   

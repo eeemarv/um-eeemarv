@@ -11,7 +11,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Vich\GeographicalBundle\Annotation as Vich;
 
 /**
- * @ORM\Table(name="places")
+ * @ORM\Table(name="place")
  * @ORM\Entity(repositoryClass="Eeemarv\EeemarvBundle\Repository\PlaceRepository")
  * @Gedmo\TranslationEntity(class="Eeemarv\EeemarvBundle\Entity\PlaceTranslation")
  * @Vich\Geographical(on="update") 

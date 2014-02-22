@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Table(name="user_nonces")
+ * @ORM\Table(name="user_nonce")
  * @ORM\Entity(repositoryClass="Eeemarv\EeemarvBundle\Entity\UserNonceRepository")
  */
 class UserNonce

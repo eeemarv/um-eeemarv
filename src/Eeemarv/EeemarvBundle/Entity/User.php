@@ -16,7 +16,7 @@ use Vich\GeographicalBundle\Annotation as Vich;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="users")
+ * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="Eeemarv\EeemarvBundle\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks
  * @Vich\Geographical(on="update") 

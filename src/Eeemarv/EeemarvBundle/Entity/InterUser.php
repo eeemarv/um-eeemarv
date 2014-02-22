@@ -1,6 +1,6 @@
 <?php
 
-namespace Lets\TransactBundle\Entity;
+namespace Eeemarv\EeemarvBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -9,7 +9,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="inter_users")
+ * @ORM\Table(name="inter_user")
  * @ORM\Entity(repositoryClass="Lets\TransactBundle\Repository\InterUserRepository")
  * @ORM\HasLifecycleCallbacks 
  */
@@ -83,7 +83,7 @@ class InterUser
 	/**
 	 * @ORM\Column(type="boolean")
 	 */
-	protected $quitting = false;
+	protected $isLeaving = false;
 	
 	/**
 	 * @ORM\Column(type="boolean", name="force_positive")

@@ -12,57 +12,57 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
- * @ORM\Table(name="pages")
- * @ORM\Entity(repositoryClass="Gedmo\Sortable\Entity\Repository\SortableRepository")
+ * ORM\Table(name="pages")
+ * ORM\Entity(repositoryClass="Gedmo\Sortable\Entity\Repository\SortableRepository")
  * ORM\Entity(repositoryClass="Eeemarv\EeemarvBundle\Repository\PageRepository")
- * @Gedmo\TranslationEntity(class="Eeemarv\EeemarvBundle\Entity\PageTranslation")
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
+ * Gedmo\TranslationEntity(class="Eeemarv\EeemarvBundle\Entity\PageTranslation")
+ * Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class Page implements Translatable
 {
     /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * ORM\Id
+     * ORM\Column(type="integer")
+     * ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id = null;
 
 	/**
-	 * @Gedmo\Translatable
-	 * @ORM\Column(type="string")
+	 * Gedmo\Translatable
+	 * ORM\Column(type="string")
 	 */
 	protected $subject;
 	
 	/**
-	 * @Gedmo\Translatable
-	 * @Gedmo\Slug(fields={"subject"}) 
-	 * @ORM\Column(type="string", unique=true)
+	 * Gedmo\Translatable
+	 * Gedmo\Slug(fields={"subject"}) 
+	 * ORM\Column(type="string", unique=true)
 	 */
 	protected $slug;
 	
 	/**
-	 * @Gedmo\SortablePosition
-	 * @ORM\Column(type="integer")
+	 * Gedmo\SortablePosition
+	 * ORM\Column(type="integer")
 	 * 
 	 */
 	protected $position;
 		
 
 	/**
-	 * @Assert\NotBlank
-	 * @Gedmo\Translatable
-	 * @ORM\Column(type="text")
+	 * Assert\NotBlank
+	 * Gedmo\Translatable
+	 * ORM\Column(type="text")
 	 */
 	protected $content;	
 
 
 	/**
-	 * @ORM\Column(type="boolean")
+	 * ORM\Column(type="boolean")
 	 */
 	protected $published = false;
 
 	/**
-	 * @ORM\Column(type="boolean")
+	 * ORM\Column(type="boolean")
 	 */
 	protected $protected = false;
 
@@ -72,33 +72,33 @@ class Page implements Translatable
 	protected $images;
 
 	/**
-	 * @Gedmo\Timestampable(on="create")
-	 * @ORM\Column(type="datetime", name="created_at", nullable=true)
+	 * Gedmo\Timestampable(on="create")
+	 * ORM\Column(type="datetime", name="created_at", nullable=true)
 	 */
 	protected $createdAt = null;
 
 	/**
-	 * @Gedmo\Blameable(on="create")
-	 * @ORM\ManyToOne(targetEntity="User")
-	 * @ORM\JoinColumn(name="created_by")
+	 * Gedmo\Blameable(on="create")
+	 * ORM\ManyToOne(targetEntity="User")
+	 * ORM\JoinColumn(name="created_by")
 	 */
 	protected $createdBy;
 
 	/**
-	 * @Gedmo\Timestampable(on="update")
-	 * @ORM\Column(type="datetime", name="updated_at", nullable=true)
+	 * Gedmo\Timestampable(on="update")
+	 * ORM\Column(type="datetime", name="updated_at", nullable=true)
 	 */
 	protected $updatedAt = null;
 		
 	/**
-	 * @Gedmo\Blameable(on="update")
-	 * @ORM\ManyToOne(targetEntity="User")
-	 * @ORM\JoinColumn(name="updated_by")
+	 * Gedmo\Blameable(on="update")
+	 * ORM\ManyToOne(targetEntity="User")
+	 * ORM\JoinColumn(name="updated_by")
 	 */
 	protected $updatedBy;
 	
     /**
-     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
+     * ORM\Column(name="deleted_at", type="datetime", nullable=true)
      */
     protected $deletedAt;	
 	

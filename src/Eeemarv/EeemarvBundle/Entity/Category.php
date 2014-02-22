@@ -14,7 +14,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @Gedmo\Tree(type="nested") 
- * @ORM\Table(name="categories")
+ * @ORM\Table(name="category")
  * @ORM\Entity(repositoryClass="Eeemarv\EeemarvBundle\Repository\CategoryRepository")
  * @Gedmo\TranslationEntity(class="Eeemarv\EeemarvBundle\Entity\CategoryTranslation") 
  */

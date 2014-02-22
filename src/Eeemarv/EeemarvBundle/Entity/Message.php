@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
- * @ORM\Table(name="messages")
+ * @ORM\Table(name="message")
  * @ORM\Entity(repositoryClass="Eeemarv\EeemarvBundle\Repository\MessageRepository")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */

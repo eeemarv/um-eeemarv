@@ -10,7 +10,7 @@ use Eeemarv\EeemarvBundle\Validator\Constraints as EeemarvAssert;
 
 
 /**
- * @ORM\Table(name="transactions")
+ * @ORM\Table(name="transaction")
  * @ORM\Entity(repositoryClass="Eeemarv\EeemarvBundle\Repository\TransactionRepository")
  */
 class Transaction
